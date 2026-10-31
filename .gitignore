@@ -1,0 +1,16 @@
+# virtual environment
+.env/
+venv/
+
+# generated data (rebuild with scripts/download_data.py + scripts/prepare_dataset.py)
+data/
+
+# python
+__pycache__/
+*.pyc
+
+# editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
