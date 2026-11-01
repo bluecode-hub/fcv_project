@@ -14,3 +14,10 @@ __pycache__/
 .idea/
 .DS_Store
 Thumbs.db
+
+# research workspace: large artefacts live on the external drive
+research/**/__pycache__/
+research/manuscript/*.aux
+research/manuscript/*.log
+research/manuscript/*.out
+data

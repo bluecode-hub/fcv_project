@@ -1,0 +1,17 @@
+# Frozen BEFORE any Sentinel-2 data were downloaded or any result was seen.
+# Region split (set a priori; TASC-v0 has no fitted parameters so the dev regions are only used
+# to lock mask definitions / analysis thresholds; held-out regions are evaluated once at the end).
+window_px: 2048          # 20.48 km at 10 m
+dem_margin_px: 256       # extra DEM context around the image window for cast shadows
+acquisitions_per_region: 4
+max_cloud_cover: 8.0     # percent, scene level
+sun_elevation_range: [12.0, 45.0]
+min_days_between_acquisitions: 20
+datetime: "2019-06-01/2025-12-31"   # processing baseline >= 04.00 (BOA offset handled explicitly)
+regions:
+  - {name: alps_valais,    split: dev,      lat: 46.05, lon: 7.55,   themes: [mountain, glacier, lake, forest]}
+  - {name: colorado_rockies, split: dev,    lat: 39.05, lon: -106.40, themes: [mountain, forest, reservoir]}
+  - {name: atacama_andes,  split: dev,      lat: -23.00, lon: -67.80, themes: [arid, rocky, bright, lake]}
+  - {name: ladakh,         split: dev,      lat: 34.00, lon: 77.60,  themes: [arid, rocky, mountain, bright]}
+  - {name: norway_jotunheimen, split: heldout, lat: 61.60, lon: 8.30, themes: [mountain, forest, lake, low-sun]}
+  - {name: nz_southern_alps, split: heldout, lat: -43.90, lon: 170.10, themes: [mountain, lake, bright, shadow]}
