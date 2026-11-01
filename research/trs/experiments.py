@@ -104,3 +104,31 @@ def metric_d2(out, s):
     r["halo"] = MX.gradient_reversal(luminance(out), luminance(s["bands"]))
     r["noise_amp"] = MX.noise_amplification(luminance(out), luminance(s["bands"]))
     return r
+
+
+def rgb_abl_methods(device="cpu"):
+    return rgb_methods(device, ablations=True)
+
+
+def d2_methods(device="cpu"):
+    """Landsat D2 (GT available): frozen v0 reproduction, v0 ablations, baselines and geometry controls."""
+    from tasc.method import TASCGamma, ABLATIONS
+    M = MT.build("rgb", device)
+    M.pop("TASC-image", None)
+
+    M["TASC-v0"] = lambda s: TASCGamma()(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
+    for k, ov in ABLATIONS.items():
+        if k != "A4_full":
+            M[k] = (lambda ov: (lambda s: TASCGamma(**ov)(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])))(ov)
+    M["TASC-DEM/beta-only"] = lambda s: run_tasc(s["bands"], {}, S=np.zeros(s["bands"].shape[:2], np.float32))
+    M["TASC-DEM/no-DCT"] = lambda s: TASCGamma(detail=False)(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
+
+    def shifted(px):
+        return lambda s: TASCGamma()(s["bands"], np.roll(s["dem"], px, axis=1), s["dx"], s["sun_az"], s["sun_el"])
+    M["TASC-DEM/shift4px(720m)"] = shifted(4)
+    M["TASC-DEM/shift16px(2.9km)"] = shifted(16)
+    M["TASC-DEM/flipped-DEM"] = lambda s: TASCGamma()(s["bands"], s["dem"][::-1].copy(), s["dx"], s["sun_az"], s["sun_el"])
+    for lab, da, de in [("az+15", 15, 0), ("az-15", -15, 0), ("az+45", 45, 0), ("el+7", 0, 7), ("el-7", 0, -7)]:
+        M[f"TASC-DEM/{lab}"] = (lambda da, de: (lambda s: TASCGamma()(
+            s["bands"], s["dem"], s["dx"], (s["sun_az"] + da) % 360, float(np.clip(s["sun_el"] + de, 3, 85)))))(da, de)
+    return M

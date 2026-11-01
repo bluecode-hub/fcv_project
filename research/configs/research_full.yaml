@@ -1,0 +1,27 @@
+# One config drives the whole batch (scripts/run_all_research.py).
+seed: 20261101
+device: cpu                      # auto-detected at run time; torch CPU build is installed
+frozen_tag: TASC-v0
+tasc_settings: v0-defaults       # no re-tuning; see protocols/protocol.md
+stages:
+  - preflight
+  - manifests
+  - e_landsat_d2         # E1 (DEM components, GT), E3 (geometry, GT), E6 on continuity data
+  - e_sentinel2          # E1/E2/E3/E5/E6 on Sentinel-2 + GLO-30
+  - e_aid                # E4/E1/E6 image-only controlled degradations
+  - e_isaid_dark         # E5/E6 paired benchmark
+  - e_darkrs             # E5/E6 real low-light, no reference
+  - e_exdark             # optional out-of-domain
+  - e_downstream         # E7
+  - e_efficiency         # runtime / memory
+  - analysis             # statistics, tables, figures
+  - reports              # coverage + summary reports
+aid:
+  per_class: 10                  # images per class in the evaluation subset (source-image level)
+  val_fraction: 0.3
+  degradations: [uniform, nonuniform, severe]
+darkrs: {max_images: 86}
+isaid_dark: {max_test_images: 66}
+exdark: {max_images: 400}
+sentinel2: {tile: 512}
+downstream: {backbone: resnet50_imagenet, head: logistic_regression_on_clean_train}
