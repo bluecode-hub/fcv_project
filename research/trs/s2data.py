@@ -60,7 +60,7 @@ def tiles(sc, V, min_valid=0.95):
                 continue
             sl = (slice(r + M, r + M + TILE), slice(c + M, c + M + TILE))
             s = dict(name=f"{m['name']}_r{r}c{c}", scene=m["name"], region=m["region"], split=m["split"],
-                     bands=sc["bands"][r:r + TILE, c:c + TILE].copy(), scl=sc["scl"][r:r + TILE, c:c + TILE],
+                     bands=np.clip(sc["bands"][r:r + TILE, c:c + TILE], 0, 1).astype(np.float32), scl=sc["scl"][r:r + TILE, c:c + TILE],
                      valid=valid, sun_az=m["sun_az"], sun_el=m["sun_el"], dx=m["dx"])
             for k, S in V.items():
                 if k.startswith("_"):

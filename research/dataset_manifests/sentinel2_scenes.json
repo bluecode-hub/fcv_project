@@ -1,0 +1,26 @@
+[
+ {
+  "name": "alps_valais_20241216",
+  "region": "alps_valais",
+  "split": "dev",
+  "datetime": "2024-12-16T10:28:35.475000Z",
+  "sun_az": 165.741519739276,
+  "sun_el": 18.952953711288302,
+  "cloud_cover": 0.345388,
+  "item_id": "S2C_32TLS_20241216_1_L2A",
+  "mgrs": null,
+  "processing_baseline": "05.11"
+ },
+ {
+  "name": "alps_valais_20251231",
+  "region": "alps_valais",
+  "split": "dev",
+  "datetime": "2025-12-31T10:28:15.539000Z",
+  "sun_az": 163.87411365492,
+  "sun_el": 18.8858990945931,
+  "cloud_cover": 0.223108,
+  "item_id": "S2C_32TLS_20251231_0_L2A",
+  "mgrs": null,
+  "processing_baseline": "05.11"
+ }
+]

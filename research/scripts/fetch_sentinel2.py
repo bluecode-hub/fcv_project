@@ -27,7 +27,7 @@ from research.trs import paths  # noqa: E402
 STAC = "https://earth-search.aws.element84.com/v1"
 RES = 10.0
 BANDS = [("blue", "B02"), ("green", "B03"), ("red", "B04"), ("nir", "B08")]
-GDAL_ENV = dict(GDAL_HTTP_MAX_RETRY="5", GDAL_HTTP_RETRY_DELAY="2", GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR",
+GDAL_ENV = dict(AWS_NO_SIGN_REQUEST="YES", AWS_DEFAULT_REGION="us-west-2", GDAL_HTTP_MAX_RETRY="5", GDAL_HTTP_RETRY_DELAY="2", GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR",
                 CPL_VSIL_CURL_ALLOWED_EXTENSIONS=".tif,.TIF", GDAL_HTTP_TIMEOUT="60")
 
 

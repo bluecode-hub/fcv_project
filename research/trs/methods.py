@@ -96,7 +96,8 @@ class ZeroDCETorch:
                 y = y + r[:, 3 * k:3 * k + 3] * (y * y - y)
         return y.clamp(0, 1)[0].permute(1, 2, 0).cpu().numpy()
 
-    def __call__(self, bands):
+    def __call__(self, sample):
+        bands = sample["bands"]
         out = bands.copy()
         out[..., :3] = self.rgb(bands[..., [2, 1, 0]])[..., ::-1]
         if bands.shape[-1] > 3:  # NIR gets the mean RGB gain, as in v0

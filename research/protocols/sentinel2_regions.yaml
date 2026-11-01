@@ -5,7 +5,7 @@ window_px: 2048          # 20.48 km at 10 m
 dem_margin_px: 256       # extra DEM context around the image window for cast shadows
 acquisitions_per_region: 4
 max_cloud_cover: 8.0     # percent, scene level
-sun_elevation_range: [12.0, 45.0]
+sun_elevation_range: [5.0, 50.0]
 min_days_between_acquisitions: 20
 datetime: "2019-06-01/2025-12-31"   # processing baseline >= 04.00 (BOA offset handled explicitly)
 regions:
