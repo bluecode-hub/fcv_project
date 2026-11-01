@@ -32,33 +32,47 @@ GDAL_ENV = dict(AWS_NO_SIGN_REQUEST="YES", AWS_DEFAULT_REGION="us-west-2", GDAL_
 
 
 def pick_items(cl, reg, cfg):
+    """Ranked candidate list: low sun (long shadows), low cloud, limited snow, one MGRS tile."""
     d = 0.2
     bbox = [reg["lon"] - d, reg["lat"] - d, reg["lon"] + d, reg["lat"] + d]
     res = cl.search(collections=["sentinel-2-l2a"], bbox=bbox, datetime=cfg["datetime"],
-                    query={"eo:cloud_cover": {"lt": cfg["max_cloud_cover"]}}, max_items=400)
+                    query={"eo:cloud_cover": {"lt": cfg["max_cloud_cover"]}}, max_items=500)
     items = []
     for it in res.items():
         p = it.properties
         el = p.get("view:sun_elevation")
         if el is None or not (cfg["sun_elevation_range"][0] <= el <= cfg["sun_elevation_range"][1]):
             continue
-        # the window must fall inside a single tile footprint (centre point test)
         items.append(it)
-    # prefer lowest sun elevation (longest shadows), then low cloud; enforce date spacing and one tile
-    items.sort(key=lambda i: (i.properties["view:sun_elevation"] + 2 * i.properties["eo:cloud_cover"]))
-    chosen, tile = [], None
-    for it in items:
-        t = it.properties["s2:mgrs_tile"] if "s2:mgrs_tile" in it.properties else it.id.split("_")[1]
-        if tile is None:
-            tile = t
-        if t != tile:
-            continue
-        d = dt.datetime.fromisoformat(it.properties["datetime"].replace("Z", "+00:00"))
-        if all(abs((d - c[1]).days) >= cfg["min_days_between_acquisitions"] for c in chosen):
-            chosen.append((it, d))
-        if len(chosen) == cfg["acquisitions_per_region"]:
-            break
-    return [c[0] for c in chosen]
+    score = lambda i: (i.properties["view:sun_elevation"] + 2 * i.properties["eo:cloud_cover"]
+                       + 0.15 * (i.properties.get("s2:snow_ice_percentage") or 0))
+    items.sort(key=score)
+    return items
+
+
+def window_in_footprint(item, reg, cfg, epsg):
+    """The whole image window must lie inside the item's data footprint (no swath-edge no-data)."""
+    from shapely.geometry import shape, box
+    from shapely.ops import transform as shp_transform
+    import pyproj
+    N = cfg["window_px"]
+    cx, cy = Transformer.from_crs(4326, epsg, always_xy=True).transform(reg["lon"], reg["lat"])
+    half = N * RES / 2 + 200
+    poly = box(cx - half, cy - half, cx + half, cy + half)
+    f = pyproj.Transformer.from_crs(epsg, 4326, always_xy=True).transform
+    return shape(item.geometry).buffer(0).contains(shp_transform(f, poly))
+
+
+def coarse_check(item, win, N, max_bad=0.01, max_cloud=0.05):
+    """Cheap overview read (128x128) of B04 + SCL: reject windows with no-data or cloud before the full download."""
+    with rasterio.open(item.assets["red"].href) as ds:
+        dn = ds.read(1, window=win, out_shape=(128, 128), resampling=Resampling.nearest)
+    nodata = float((dn == 0).mean())
+    with rasterio.open(item.assets["scl"].href) as ds:
+        sw = Window(win.col_off / 2, win.row_off / 2, N / 2, N / 2)
+        scl = ds.read(1, window=sw, out_shape=(128, 128), resampling=Resampling.nearest)
+    cloud = float(np.isin(scl, [8, 9, 10, 0]).mean())
+    return nodata <= max_bad and cloud <= max_cloud, nodata, cloud
 
 
 def read_window(href, win, out_shape=None):
@@ -81,8 +95,11 @@ def fetch_scene(item, reg, cfg, cl, dsdir, demdir):
         row0 = int(round((cy - T.f) / T.e)) - N // 2
         H0, W0 = ref.height, ref.width
     if col0 < 0 or row0 < 0 or col0 + N > W0 or row0 + N > H0:
-        return name, "window outside tile"
+        return name, "reject: window outside tile"
     win = Window(col0, row0, N, N)
+    ok, nod, cld = coarse_check(item, win, N)
+    if not ok:
+        return name, f"reject: coarse check nodata={nod:.3f} cloud/nodata-class={cld:.3f}"
     transform = from_origin(T.c + col0 * T.a, T.f + row0 * T.e, RES, RES)
     bands = np.zeros((N, N, 4), np.float32)
     for k, (an, _) in enumerate(BANDS):
@@ -151,15 +168,32 @@ def main():
         for reg in cfg["regions"]:
             if a.only and reg["name"] != a.only:
                 continue
-            for it in pick_items(cl, reg, cfg):
+            cands = pick_items(cl, reg, cfg)
+            accepted, tile = [], None
+            for it in cands:
+                if len(accepted) >= cfg["acquisitions_per_region"]:
+                    break
+                epsg = it.properties.get("proj:epsg") or int(str(it.properties["proj:code"]).split(":")[1])
+                t = it.properties.get("s2:mgrs_tile") or it.id.split("_")[1]
+                d = dt.datetime.fromisoformat(it.properties["datetime"].replace("Z", "+00:00"))
+                if tile is not None and t != tile:
+                    continue
+                if any(abs((d - a_[1]).days) < cfg["min_days_between_acquisitions"] for a_ in accepted):
+                    continue
+                if not window_in_footprint(it, reg, cfg, epsg):
+                    continue
                 for attempt in range(3):
                     try:
                         n, st = fetch_scene(it, reg, cfg, cl, dsdir, demdir)
                         break
-                    except Exception as e:  # transient network errors: retry
+                    except Exception as e:
                         n, st = it.id, f"error: {type(e).__name__}: {e}"
                 print(f"{reg['name']:22s} {n:36s} {st}", flush=True)
                 log.append(dict(region=reg["name"], scene=n, status=st, item=it.id))
+                if st in ("ok", "cached"):
+                    accepted.append((it, d))
+                    tile = t
+            print(f"{reg['name']}: accepted {len(accepted)}/{cfg['acquisitions_per_region']} (candidates {len(cands)})", flush=True)
     json.dump(log, open(paths.ROOT / "logs/fetch_sentinel2.json", "w"), indent=1)
 
 

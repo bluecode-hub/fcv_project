@@ -11,6 +11,7 @@ ROOT = Path(os.environ.get("TASC_ROOT", MOUNT / "TASC_Research"))
 REPO = Path(__file__).resolve().parents[2]
 RESEARCH = REPO / "research"
 
+os.environ.setdefault("TORCH_HOME", str(ROOT / "checkpoints" / "torch"))   # model weights stay on the drive
 SUBDIRS = ["datasets/landsat_original", "datasets/isaid_dark", "datasets/darkrs", "datasets/aid",
            "datasets/sentinel2", "datasets/copernicus_dem", "datasets/exdark", "datasets/synthetic",
            "cache", "checkpoints", "experiment_outputs", "manifests", "logs"]

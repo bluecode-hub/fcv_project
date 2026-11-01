@@ -1,5 +1,29 @@
 [
  {
+  "name": "alps_valais_20221127",
+  "region": "alps_valais",
+  "split": "dev",
+  "datetime": "2022-11-27T10:28:08.117000Z",
+  "sun_az": 167.222599451231,
+  "sun_el": 21.417089071963204,
+  "cloud_cover": 1.27651,
+  "item_id": "S2A_32TLS_20221127_0_L2A",
+  "mgrs": null,
+  "processing_baseline": "04.00"
+ },
+ {
+  "name": "alps_valais_20231225",
+  "region": "alps_valais",
+  "split": "dev",
+  "datetime": "2023-12-25T10:38:01.284000Z",
+  "sun_az": 167.036048108218,
+  "sun_el": 19.118829670191502,
+  "cloud_cover": 0.328092,
+  "item_id": "S2A_32TLS_20231225_0_L2A",
+  "mgrs": null,
+  "processing_baseline": "05.10"
+ },
+ {
   "name": "alps_valais_20241216",
   "region": "alps_valais",
   "split": "dev",
@@ -20,6 +44,90 @@
   "sun_el": 18.8858990945931,
   "cloud_cover": 0.223108,
   "item_id": "S2C_32TLS_20251231_0_L2A",
+  "mgrs": null,
+  "processing_baseline": "05.11"
+ },
+ {
+  "name": "colorado_rockies_20221217",
+  "region": "colorado_rockies",
+  "split": "dev",
+  "datetime": "2022-12-17T18:03:12.400000Z",
+  "sun_az": 164.772566595322,
+  "sun_el": 25.847942661411693,
+  "cloud_cover": 0.050279,
+  "item_id": "S2B_13SCD_20221217_0_L2A",
+  "mgrs": null,
+  "processing_baseline": "05.09"
+ },
+ {
+  "name": "colorado_rockies_20231217",
+  "region": "colorado_rockies",
+  "split": "dev",
+  "datetime": "2023-12-17T18:03:09.908000Z",
+  "sun_az": 164.782875183593,
+  "sun_el": 25.857675343957794,
+  "cloud_cover": 0.002906,
+  "item_id": "S2A_13SCD_20231217_0_L2A",
+  "mgrs": null,
+  "processing_baseline": "05.10"
+ },
+ {
+  "name": "colorado_rockies_20241221",
+  "region": "colorado_rockies",
+  "split": "dev",
+  "datetime": "2024-12-21T18:03:13.805000Z",
+  "sun_az": 164.238986173175,
+  "sun_el": 25.667588076147,
+  "cloud_cover": 0.0286,
+  "item_id": "S2A_13SCD_20241221_0_L2A",
+  "mgrs": null,
+  "processing_baseline": "05.11"
+ },
+ {
+  "name": "ladakh_20211230",
+  "region": "ladakh",
+  "split": "dev",
+  "datetime": "2021-12-30T05:39:31.867000Z",
+  "sun_az": 160.766942685133,
+  "sun_el": 30.5192572309124,
+  "cloud_cover": 0.079505,
+  "item_id": "S2B_43SGT_20211230_1_L2A",
+  "mgrs": null,
+  "processing_baseline": "05.00"
+ },
+ {
+  "name": "ladakh_20221225",
+  "region": "ladakh",
+  "split": "dev",
+  "datetime": "2022-12-25T05:39:35.378000Z",
+  "sun_az": 161.518531346824,
+  "sun_el": 30.4611958039304,
+  "cloud_cover": 0.012097,
+  "item_id": "S2B_43SGT_20221225_0_L2A",
+  "mgrs": null,
+  "processing_baseline": "05.09"
+ },
+ {
+  "name": "ladakh_20231228",
+  "region": "ladakh",
+  "split": "dev",
+  "datetime": "2023-12-28T05:49:28.303000Z",
+  "sun_az": 163.683828540513,
+  "sun_el": 31.0905853348943,
+  "cloud_cover": 0.035711,
+  "item_id": "S2A_43SGT_20231228_0_L2A",
+  "mgrs": null,
+  "processing_baseline": "05.10"
+ },
+ {
+  "name": "ladakh_20251224",
+  "region": "ladakh",
+  "split": "dev",
+  "datetime": "2025-12-24T05:39:43.776000Z",
+  "sun_az": 161.647655397389,
+  "sun_el": 30.476932635500603,
+  "cloud_cover": 0.03078,
+  "item_id": "S2C_43SGT_20251224_0_L2A",
   "mgrs": null,
   "processing_baseline": "05.11"
  }

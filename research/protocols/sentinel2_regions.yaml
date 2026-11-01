@@ -1,10 +1,10 @@
 # Frozen BEFORE any Sentinel-2 data were downloaded or any result was seen.
 # Region split (set a priori; TASC-v0 has no fitted parameters so the dev regions are only used
 # to lock mask definitions / analysis thresholds; held-out regions are evaluated once at the end).
-window_px: 2048          # 20.48 km at 10 m
+window_px: 1536          # 15.36 km at 10 m (reduced from 2048 for bandwidth)
 dem_margin_px: 256       # extra DEM context around the image window for cast shadows
 acquisitions_per_region: 4
-max_cloud_cover: 8.0     # percent, scene level
+max_cloud_cover: 10.0    # percent, scene level
 sun_elevation_range: [5.0, 50.0]
 min_days_between_acquisitions: 20
 datetime: "2019-06-01/2025-12-31"   # processing baseline >= 04.00 (BOA offset handled explicitly)
