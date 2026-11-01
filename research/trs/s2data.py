@@ -16,7 +16,11 @@ def load_scene(name):
     z = np.load(paths.ds("sentinel2") / f"{name}.npz")
     d = np.load(paths.ds("copernicus_dem") / f"{name}_dem.npz")
     meta = json.loads(str(z["meta"]))
-    return dict(bands=z["bands"], scl=z["scl"], valid=z["valid"], dem=d["dem"], meta=meta)
+    # NOTE: the "valid" array stored by the first fetch was computed AFTER the BOA offset, so it wrongly marked
+    # dark pixels (reflectance <= 0: deep shadow, clear water) as invalid. Validity is derived from SCL instead:
+    # class 0 = NO_DATA, class 1 = saturated/defective.
+    valid = ~np.isin(z["scl"], [0, 1])
+    return dict(bands=z["bands"], scl=z["scl"], valid=valid, dem=d["dem"], meta=meta)
 
 
 def list_scenes(split=None):

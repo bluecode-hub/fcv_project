@@ -113,7 +113,7 @@ def fetch_scene(item, reg, cfg, cl, dsdir, demdir):
     with rasterio.open(item.assets["scl"].href) as ds:  # 20 m -> 10 m by nearest neighbour
         sw = Window(col0 / 2, row0 / 2, N / 2, N / 2)
         scl = ds.read(1, window=sw, out_shape=(N, N), resampling=Resampling.nearest).astype(np.uint8)
-    valid = (bands > 0).all(-1)
+    valid = ~np.isin(scl, [0, 1])          # SCL NO_DATA / saturated-defective (offset can make dark reflectance <= 0)
     bands = np.clip(bands, 0, 1.2)
     # ---- DEM on the image grid + margin (bilinear resampling from 30 m)
     Dn = N + 2 * M
