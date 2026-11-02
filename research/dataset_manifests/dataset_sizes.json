@@ -1,0 +1,34 @@
+{
+ "landsat_original": {
+  "files": 332,
+  "size_gb": 0.127
+ },
+ "isaid_dark": {
+  "files": 229,
+  "size_gb": 4.813
+ },
+ "darkrs": {
+  "files": 87,
+  "size_gb": 0.069
+ },
+ "aid": {
+  "files": 1201,
+  "size_gb": 0.334
+ },
+ "sentinel2": {
+  "files": 24,
+  "size_gb": 0.418
+ },
+ "copernicus_dem": {
+  "files": 24,
+  "size_gb": 0.326
+ },
+ "exdark": {
+  "files": 7364,
+  "size_gb": 3.002
+ },
+ "synthetic": {
+  "files": 0,
+  "size_gb": 0.0
+ }
+}

@@ -77,7 +77,7 @@ def stage_sentinel2(cfg, log):
 
 # ------------------------------------------------------------------ generic image-only stages
 def _par(cfg):
-    return max(1, min(6, (os.cpu_count() or 4) // 2))
+    return int(cfg.get("workers", 4))
 
 
 def stage_landsat_d2(cfg, log):

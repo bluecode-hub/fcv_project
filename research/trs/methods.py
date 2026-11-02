@@ -82,7 +82,23 @@ class ZeroDCETorch:
         self.p = {k: torch.from_numpy(v).to(device) for k, v in p.items()}
         self.dev = device
 
-    def rgb(self, rgb):
+    def rgb(self, rgb, tile=512, pad=16):
+        """Large images run in overlapping tiles (DCE-Net receptive field is 15 px, so a 16 px overlap is exact);
+        this bounds peak memory. Output is identical to a single pass (verified in research/tests)."""
+        H, W, _ = rgb.shape
+        if H * W <= 1.2e6:
+            return self._rgb(rgb)
+        out = np.empty_like(rgb, dtype=np.float32)
+        for r in range(0, H, tile):
+            for c in range(0, W, tile):
+                r0, c0 = max(r - pad, 0), max(c - pad, 0)
+                r1, c1 = min(r + tile + pad, H), min(c + tile + pad, W)
+                o = self._rgb(rgb[r0:r1, c0:c1])
+                h, w = min(tile, H - r), min(tile, W - c)
+                out[r:r + h, c:c + w] = o[r - r0:r - r0 + h, c - c0:c - c0 + w]
+        return out
+
+    def _rgb(self, rgb):
         t = self.torch
         F = t.nn.functional
         x = t.from_numpy(np.ascontiguousarray(rgb.transpose(2, 0, 1)))[None].float().to(self.dev)

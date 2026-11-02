@@ -1,0 +1,7 @@
+{
+ "datasets/darkrs/raw_archive/darkrs.rar": "5b3a7801033ed3679f7fcd04e616f780c8b20b07dff0610dd1f018972b9314a3",
+ "datasets/isaid_dark/raw_archive/isaid_dark.bin": "da8d4749f078016ec49afe610aed7879c69251216ac41ca04e406e319c6a4d05",
+ "datasets/exdark/raw_archive/exdark.bin": "2d21a1edc004603ef36635e08c5e5aa5b4f41b95863b083883f41ad1dd116779",
+ "checkpoints/dffn/weight/model_best_isaid.pt": "92085da6eda2e541fed3105c6569da1923aae530da828eedba600c8417651229",
+ "checkpoints/torch/hub/checkpoints/alexnet-owt-7be5be79.pth": "7be5be791159472b1fbf3c69796f7cb30dca7ad8466c2df70058c37116cdee02"
+}

@@ -21,3 +21,9 @@ research/manuscript/*.aux
 research/manuscript/*.log
 research/manuscript/*.out
 data
+
+# research build artefacts
+research/manuscript/_eq/
+research/manuscript/_first_draft.html
+research/__pycache__/
+.pytest_cache/

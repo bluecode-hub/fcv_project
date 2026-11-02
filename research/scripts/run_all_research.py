@@ -117,7 +117,7 @@ def st_darkrs(cfg, log):
 
 
 def st_exdark(cfg, log):
-    root = paths.ds("exdark") / "extracted"
+    root = paths.ds("exdark") / "extracted" / "ExDark"
     need(root, "ExDark")
     return stages.stage_folder_nr("e_exdark", root, cfg, log, cfg["exdark"]["max_images"])
 

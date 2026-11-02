@@ -1,5 +1,7 @@
 # One config drives the whole batch (scripts/run_all_research.py).
 seed: 20261101
+workers: 4                       # image-level worker processes (memory-bounded: 15 GB RAM host)
+workers_highres: 2               # 1080p stages
 device: cpu                      # auto-detected at run time; torch CPU build is installed
 frozen_tag: TASC-v0
 tasc_settings: v0-defaults       # no re-tuning; see protocols/protocol.md

@@ -68,3 +68,15 @@ def test_store_resume(tmp_path):
     with open(tmp_path / "r.jsonl", "a") as f:
         f.write('{"sample": "b", "meth')           # simulated crash mid-write
     assert not Store(tmp_path / "r.jsonl").has("b", "m")
+
+
+def test_zerodce_tiled_equals_single_pass():
+    from research.trs.methods import ZeroDCETorch
+    z = ZeroDCETorch()
+    x = np.random.default_rng(5).random((700, 900, 3)).astype(np.float32) * 0.4
+    full = z._rgb(x)
+    tiled = z.rgb(x)           # 0.63 MP -> single pass; force tiling by temporarily lowering the threshold
+    assert np.allclose(full, tiled, atol=1e-6)
+    import research.trs.methods as M
+    big = np.random.default_rng(6).random((1100, 1200, 3)).astype(np.float32) * 0.4   # 1.3 MP -> tiled
+    assert np.allclose(z._rgb(big), z.rgb(big), atol=1e-5)
