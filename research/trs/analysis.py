@@ -16,10 +16,37 @@ PAIRED = {"psnr": 1, "ssim": 1, "lpips": 0, "mae": 0, "mae_dark_in": 0, "mae_bri
           "overshoot_bright": 0, "halo": 0, "noise_amp": 0, "blockiness": 0, "ndvi_mae_vs_gt": 0, "sam_vs_gt": 0, "ms_per_mp": 0}
 NR = {"entropy": 1, "eme": 1, "avg_grad": 1, "brisque": 0, "niqe": 0, "halo": 0, "noise_amp": 0, "blockiness": 0, "mean_Y": 1,
       "ms_per_mp": 0}
-S2M = {**NR, "lift_shadow": 1, "lift_dark_lit": 0, "dark_to_shadow_lift": 0, "lift_bright": 0, "bright_clip": 0,
+S2M = {**NR, "sam_t03": 0, "lift_shadow": 1, "lift_dark_lit": 0, "dark_to_shadow_lift": 0, "lift_bright": 0, "bright_clip": 0,
        "bright_compress": 0, "equalisation_gain": 1, "ndvi_mae": 0, "ndwi_mae": 0, "sam": 0, "band_ratio_dev": 0}
 D2M = {"psnr": 1, "ssim": 1, "lpips": 0, "mae_shadow": 0, "mae_lit": 0, "mae_darkmat": 0, "mae_cloud": 0, "overshoot_lit": 0,
        "clip_lit": 0, "ndvi_mae_vs_gt": 0, "sam_vs_gt": 0, "halo": 0, "noise_amp": 0, "blockiness": 0, "ms_per_mp": 0}
+
+
+def _merge_sam(df, store, cols, rename=None):
+    """Replace the (defective) spectral-angle columns by the corrected ones from the correction-pass store.
+    The original value is kept as <col>_orig_defective.  Rows are matched on (sample, method)."""
+    p = paths.ROOT / "experiment_outputs" / store / "results.jsonl"
+    if not p.exists():
+        return df, False
+    new = load_rows(p)
+    new = new[new["status"] == "ok"]
+    keep = ["sample", "method"] + [c for c in cols if c in new]
+    new = new[keep].drop_duplicates(["sample", "method"])
+    for c in cols:
+        if c in df:
+            df = df.rename(columns={c: f"{c}_orig_defective"})
+    df = df.merge(new, on=["sample", "method"], how="left")
+    return df, True
+
+
+def _d2_src(name):
+    return name.rsplit("_v", 1)[0]
+
+
+def _isaid_parent(name):
+    import re
+    m = re.search(r"P\d+", name)
+    return m.group(0) if m else name
 
 
 def _save(df, name, caption=None, floatfmt=3):
@@ -78,15 +105,24 @@ def run(cfg, log):
     # ---------------- Landsat D2 (continuity + GT geometry controls)
     d2 = load_rows(od / "e_landsat_d2/results.jsonl")
     if len(d2):
-        d2["unit"] = d2["sample"]
+        d2, has = _merge_sam(d2, "e_landsat_d2_spectral", ["sam_vs_gt", "sam_vs_input", "ndvi_mae_vs_gt", "vsgt_frac_used", "vsgt_sam_t03", "vsinp_ndvi_mae", "vsinp_band_ratio_dev"])
+        R["d2_sam_corrected"] = bool(has)
+        # D2 test = 6 source crops of ONE Landsat scene x 10 synthetic illumination variants: the 10 variants of a crop are
+        # dependent, so the independent unit is the source crop (n = 6); variants are averaged first.
+        d2["unit"] = d2["sample"].map(_d2_src)
         R["d2_fail"] = int((d2["status"] != "ok").sum())
-        s = summary_table(d2, D2M, "unit")
+        D2X = {**D2M, "sam_vs_input": 0}
+        s = summary_table(d2, D2X, "unit", pre_unit="sample")
         s.to_csv(TAB / "d2_summary_raw.csv")
-        _save(fmt_pm(s, ["psnr", "ssim", "lpips", "mae_shadow", "mae_darkmat", "mae_cloud", "overshoot_lit", "ndvi_mae_vs_gt"]),
-              "d2_summary", "Landsat D2 test (60 synthetic pairs): mean $\\pm$ 95\\% bootstrap CI half-width.")
-        c = compare_all(d2, "TASC-v0", {k: v for k, v in D2M.items() if k != "ms_per_mp"}, "unit")
+        _save(fmt_pm(s, ["psnr", "ssim", "lpips", "mae_shadow", "mae_darkmat", "mae_cloud", "overshoot_lit", "ndvi_mae_vs_gt", "sam_vs_gt", "sam_vs_input"]),
+              "d2_summary", "Landsat D2 test (6 source crops x 10 synthetic variants; units = source crops): mean $\\pm$ 95\\% bootstrap CI half-width.")
+        c = compare_all(d2, "TASC-v0", {k: v for k, v in D2X.items() if k != "ms_per_mp"}, "unit", pre_unit="sample")
         c.to_csv(TAB / "d2_vs_tascv0.csv", index=False)
+        # variant-level (60 dependent pairs) kept only as a descriptive sensitivity analysis
+        c60 = compare_all(d2.assign(unit=d2["sample"]), "TASC-v0", {k: v for k, v in D2X.items() if k != "ms_per_mp"}, "unit")
+        c60.to_csv(TAB / "d2_vs_tascv0_variant_level_dependent.csv", index=False)
         R["d2_units"] = int(d2["unit"].nunique())
+        R["d2_variants"] = int(d2["sample"].nunique())
     # ---------------- AID (E4 / E1 image-only / E6)
     aid = load_rows(od / "e_aid/results.jsonl")
     if len(aid):
@@ -103,6 +139,12 @@ def run(cfg, log):
     # ---------------- Sentinel-2 (E2 / E3 / E5 / E6)
     s2 = load_rows(od / "e_sentinel2/results.jsonl")
     if len(s2):
+        s2, has = _merge_sam(s2, "e_sentinel2_spectral", ["sam", "sam_t03", "ndvi_mae", "ndwi_mae", "band_ratio_dev", "n_used", "n_valid_mask", "n_excl_norm", "n_excl_invalid", "frac_used"])
+        R["s2_sam_corrected"] = bool(has)
+        if has:
+            ex = s2[s2.status == "ok"].groupby(["split", "method"])[["n_valid_mask", "n_used", "n_excl_norm", "n_excl_invalid"]].sum()
+            ex["frac_used"] = ex["n_used"] / ex["n_valid_mask"]
+            ex.to_csv(TAB / "s2_sam_exclusions.csv")
         R["s2_fail"] = int((s2["status"] != "ok").sum())
         for split in ("dev", "heldout", "all"):
             d = s2 if split == "all" else s2[s2["split"] == split]
@@ -132,12 +174,13 @@ def run(cfg, log):
     # ---------------- iSAID-dark
     d = load_rows(od / "e_isaid_dark/results.jsonl")
     if len(d):
-        d["unit"] = d["sample"]
-        s = summary_table(d, PAIRED, "unit")
+        # parent-image id (P####): the three val crops and the three high-pixel darkness levels of one parent are dependent
+        d["unit"] = d["sample"].map(_isaid_parent)
+        s = summary_table(d, PAIRED, "unit", pre_unit="sample")
         s.to_csv(TAB / "isaid_summary_raw.csv")
         _save(fmt_pm(s, ["psnr", "ssim", "lpips", "mae_dark_in", "mae_bright", "halo", "noise_amp"]), "isaid_summary",
-              "iSAID-dark test.")
-        compare_all(d, "TASC-image", PAIRED, "unit").to_csv(TAB / "isaid_vs_tasc_image.csv", index=False)
+              "iSAID-dark (units = parent images; crops/levels averaged first).")
+        compare_all(d, "TASC-image", PAIRED, "unit", pre_unit="sample").to_csv(TAB / "isaid_vs_tasc_image.csv", index=False)
         R["isaid_units"] = int(d["unit"].nunique())
     # ---------------- downstream
     d = load_rows(od / "e_downstream/results.jsonl")

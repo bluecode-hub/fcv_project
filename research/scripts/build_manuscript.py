@@ -16,7 +16,7 @@ ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII
 TEX_CHARS = {"τ": r"$\tau$", "γ": r"$\gamma$", "β": r"$\beta$", "μ": r"$\mu$", "σ": r"$\sigma$", "ε": r"$\epsilon$",
              "×": r"$\times$", "±": r"$\pm$", "≥": r"$\geq$", "≤": r"$\leq$", "−": r"$-$", "°": r"$^{\circ}$",
              "↑": r"$\uparrow$", "↓": r"$\downarrow$", "–": "--", "—": "---", "≈": r"$\approx$", "′": "'", "·": r"$\cdot$",
-             "∈": r"$\in$", "“": "``", "”": "''", "’": "'", "‘": "`"}
+             "∈": r"$\in$", "æ": r"{\ae}", "“": "``", "”": "''", "’": "'", "‘": "`"}
 TOKEN = re.compile(r"(\$[^$]+\$|`[^`]+`|\[@[^\]]+\]|\[#[^\]]+\]|\*\*[^*]+\*\*|\*[^*]+\*|p_Holm|10\^-\d)")
 
 
@@ -190,6 +190,7 @@ def math_html(m):
     s = re.sub(r"_(\w)", r"<sub>\1</sub>", s)
     s = re.sub(r"\^\{([^}]*)\}", r"<sup>\1</sup>", s)
     s = re.sub(r"\^(\w)", r"<sup>\1</sup>", s)
+    s = re.sub(r"\\(?:bigl|bigr|left|right)", "", s)
     s = s.replace(r"\ln", "ln").replace(r"\,", " ").replace("\\ ", " ").replace("\\sqrt", "√")
     s = s.replace("{", "").replace("}", "")
     return s
@@ -256,7 +257,7 @@ def fmt_ref(f):
         else:
             names.append(a)
     a_txt = ", ".join(names[:-1]) + (", and " if len(names) > 2 else " and ") + names[-1] if len(names) > 1 else (names[0] if names else "")
-    clean = lambda s: re.sub(r"[{}]", "", s).replace("--", "–").replace("\\&", "&")
+    clean = lambda s: re.sub(r"[{}]", "", s).replace("--", "–").replace("\\&", "&").replace("``", "“").replace("''", "”")
     parts = [clean(a_txt), f"“{clean(f.get('title', ''))},”"]
     src = f.get("journal") or f.get("booktitle") or ""
     if src:
@@ -273,16 +274,25 @@ def fmt_ref(f):
 
 
 def render_eq(tex, idx, outdir):
+    """Render one display equation to a PNG with matplotlib mathtext (STIX serif).  Raises on any parse error and
+    returns (path, width_pt, height_pt) at natural size (never rescaled, so symbols match the body text)."""
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from matplotlib import rcParams
+    rcParams["mathtext.fontset"] = "stix"
     outdir.mkdir(exist_ok=True)
+    dpi = 300
     fig = plt.figure(figsize=(0.01, 0.01))
-    fig.text(0, 0, f"${tex}$", fontsize=13)
+    mt = re.sub(r"\\big[lr]?|\\Big[lr]?", "", tex)       # mathtext has no \\bigl/\\bigr; sizes are cosmetic
+    fig.text(0, 0, f"${mt}$", fontsize=10)
     p = outdir / f"eq{idx}.png"
-    fig.savefig(p, dpi=220, bbox_inches="tight", pad_inches=0.04, transparent=True)
+    fig.savefig(p, dpi=dpi, bbox_inches="tight", pad_inches=0.03, transparent=True)
     plt.close(fig)
-    return p
+    from PIL import Image
+    w, h = Image.open(p).size
+    assert w > 20 and h > 10, f"equation {idx} rendered empty: {tex}"
+    return p, w * 72.0 / dpi, h * 72.0 / dpi
 
 
 CSS = """
@@ -307,7 +317,7 @@ figure { margin: 4pt 0; text-align: center; break-inside: avoid; }
 figure.wide { column-span: all; }
 figure img { max-width: 100%; }
 figcaption { font-size: 7.5pt; margin-top: 2pt; }
-.eq { text-align: center; margin: 3pt 0; } .eq img { max-height: 28pt; max-width: 95%; }
+.eq { display: flex; align-items: center; margin: 4pt 0; } .eq .m { flex: 1; text-align: center; } .eq .n { width: 16pt; text-align: right; font-size: 9pt; }
 code { font-family: 'DejaVu Sans Mono', monospace; font-size: 7pt; }
 ol { margin: 0 0 4pt 12pt; padding: 0; } li { margin: 0 0 2pt; }
 .refs { font-size: 7.5pt; text-align: left; } .refs p { margin: 0 0 2pt; padding-left: 14pt; text-indent: -14pt; }
@@ -321,7 +331,7 @@ def to_html(blocks, eqdir):
     ent = parse_bib()
     title = next(b[1] for b in blocks if b[0] == "title")
     H = [f"<html><head><meta charset='utf-8'><style>{CSS}</style></head><body>",
-         f"<h1 class='title'>{html.escape(title)}</h1><div class='auth'>[Authors to be added] — first complete draft</div>"]
+         f"<h1 class='title'>{html.escape(title)}</h1><div class='auth'>[Authors to be added] — corrected draft v2. <b>Fallback rendering (WeasyPrint); this PDF was not compiled with IEEEtran/LaTeX.</b></div>"]
     sec = 0
     i, eq_i = 0, 0
     opened = False
@@ -345,8 +355,9 @@ def to_html(blocks, eqdir):
             H.append("<ol>" + "".join("<li>" + html_inline(x, nums, cites) + "</li>" for x in b[1]) + "</ol>")
         elif k == "eq":
             eq_i += 1
-            p = render_eq(b[1], eq_i, eqdir)
-            H.append(f"<div class='eq'><img src='{p.as_uri()}'></div>")
+            p, w_pt, h_pt = render_eq(b[1], eq_i, eqdir)
+            assert w_pt < 235, f"equation {eq_i} is wider than a column ({w_pt:.0f} pt): split it"
+            H.append(f"<div class='eq'><div class='m'><img src='{p.as_uri()}' style='width:{w_pt:.1f}pt;height:{h_pt:.1f}pt'></div><div class='n'>({eq_i})</div></div>")
         elif k == "figure":
             _, cap, path, lab, w = b
             H.append(f"<figure class='wide'><img src='{(MAN / path).resolve().as_uri()}' style='width:{int(w * 100)}%'>"

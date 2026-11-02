@@ -1,8 +1,11 @@
 {
+ "d2_sam_corrected": true,
  "d2_fail": 0,
- "d2_units": 60,
+ "d2_units": 6,
+ "d2_variants": 60,
  "aid_fail": 0,
  "aid_units": 210,
+ "s2_sam_corrected": true,
  "s2_fail": 0,
  "s2_regions": [
   "alps_valais",
@@ -15,7 +18,7 @@
  "s2_scenes": 24,
  "darkrs_units": 86,
  "exdark_units": 400,
- "isaid_units": 138,
+ "isaid_units": 46,
  "downstream_n": 210,
  "env": {
   "platform": "Linux-7.2.11-1-cachyos-x86_64-with-glibc2.44",

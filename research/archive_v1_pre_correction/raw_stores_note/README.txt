@@ -1,0 +1,1 @@
+Original JSONL result stores remain unmodified on the external drive: experiment_outputs/e_sentinel2/results.jsonl and e_landsat_d2/results.jsonl (columns 'sam' / 'sam_vs_gt' computed with the frozen tasc.metrics.sam_deg).

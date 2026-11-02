@@ -132,3 +132,37 @@ def d2_methods(device="cpu"):
         M[f"TASC-DEM/{lab}"] = (lambda da, de: (lambda s: TASCGamma()(
             s["bands"], s["dem"], s["dx"], (s["sun_az"] + da) % 360, float(np.clip(s["sun_el"] + de, 3, 85)))))(da, de)
     return M
+
+
+# ------------------------------------------------------------------ corrected spectral metrics (correction pass)
+def _spectral_block(out, ref, valid, prefix=""):
+    """SAM, NDVI/NDWI error and band-ratio deviation of `out` against `ref`, corrected validity handling; 4-band input."""
+    from . import spectral as SP
+    r = {}
+    sm = SP.sam_deg_valid(out, ref, valid)
+    r.update({f"{prefix}sam": sm["sam"], f"{prefix}n_used": sm["n_used"], f"{prefix}n_valid_mask": sm["n_valid_mask"],
+              f"{prefix}n_excl_norm": sm["n_excl_norm"], f"{prefix}n_excl_invalid": sm["n_excl_invalid"],
+              f"{prefix}frac_used": sm["frac_used"]})
+    r[f"{prefix}sam_t03"] = SP.sam_deg_valid(out, ref, valid, SP.MIN_NORM_SENS)["sam"]
+    if out.shape[-1] >= 4:
+        r[f"{prefix}ndvi_mae"], r[f"{prefix}ndvi_n"], _ = SP.nd_index_mae_valid(out, ref, 3, 2, valid)
+        r[f"{prefix}ndwi_mae"], _, _ = SP.nd_index_mae_valid(out, ref, 1, 3, valid)
+        r[f"{prefix}band_ratio_dev"], r[f"{prefix}ratio_n"], _ = SP.band_ratio_dev_valid(out, ref, valid)
+    return r
+
+
+def metric_s2_sam(out, s):
+    """Sentinel-2: corrected spectral preservation of the output relative to the INPUT."""
+    r = _spectral_block(out, s["bands"], s["valid"])
+    r.update(region=s["region"], scene=s["scene"], split=s["split"])
+    return r
+
+
+def metric_d2_sam(out, s):
+    """Landsat D2: corrected spectral reconstruction accuracy against the clean reference (vsgt_*) and preservation
+    relative to the degraded input (vsinp_*)."""
+    r = _spectral_block(out, s["gt"], None, "vsgt_")
+    r.update(_spectral_block(out, s["bands"], None, "vsinp_"))
+    r["sam_vs_gt"], r["sam_vs_input"] = r["vsgt_sam"], r["vsinp_sam"]
+    r["ndvi_mae_vs_gt"] = r["vsgt_ndvi_mae"]
+    return r

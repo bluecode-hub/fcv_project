@@ -1,0 +1,24 @@
+\begin{table}[t]
+\caption{AID scene classification accuracy with a fixed ResNet-50 + linear head.}
+\label{tab:downstream_accuracy}
+\begin{tabular}{lrrr}
+\toprule
+degradation & nonuniform & severe & uniform \\
+variant &  &  &  \\
+\midrule
+2D-gamma & 0.652 & 0.390 & 0.610 \\
+AGC & 0.824 & 0.543 & 0.805 \\
+AGCWD & 0.852 & 0.624 & 0.824 \\
+AGCWD+shared & 0.862 & 0.595 & 0.800 \\
+CLAHE & 0.852 & 0.605 & 0.829 \\
+CLAHE+shared & 0.862 & 0.590 & 0.814 \\
+Clean-reference & 0.881 & 0.881 & 0.881 \\
+GlobalGamma & 0.805 & 0.524 & 0.810 \\
+GlobalGamma-perband & 0.852 & 0.610 & 0.824 \\
+HE & 0.795 & 0.595 & 0.814 \\
+Identity & 0.857 & 0.581 & 0.838 \\
+TASC-image & 0.710 & 0.343 & 0.638 \\
+Zero-DCE & 0.833 & 0.624 & 0.857 \\
+\bottomrule
+\end{tabular}
+\end{table}
