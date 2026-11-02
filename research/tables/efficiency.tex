@@ -1,0 +1,23 @@
+\begin{table}[t]
+\caption{Runtime per megapixel (1 MP image) and peak RSS, CPU only.}
+\label{tab:efficiency}
+\begin{tabular}{lrr}
+\toprule
+ & ms\_per\_mp & peak\_rss\_mb \\
+method &  &  \\
+\midrule
+Identity & 0.6 & 4396.7 \\
+GlobalGamma & 51.4 & 4396.7 \\
+GlobalGamma-perband & 21.8 & 4396.7 \\
+AGCWD+shared & 50.7 & 4396.7 \\
+CLAHE+shared & 48.1 & 4396.7 \\
+HE & 20.7 & 4396.7 \\
+CLAHE & 13.2 & 4396.7 \\
+AGC & 70.3 & 4396.7 \\
+AGCWD & 22.2 & 4396.7 \\
+2D-gamma & 163.7 & 4396.7 \\
+Zero-DCE & 32845.1 & 4396.7 \\
+TASC-image & 114.0 & 4396.7 \\
+\bottomrule
+\end{tabular}
+\end{table}

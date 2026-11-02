@@ -1,5 +1,31 @@
 {
  "d2_fail": 0,
  "d2_units": 60,
- "darkrs_units": 86
+ "aid_fail": 0,
+ "aid_units": 210,
+ "s2_fail": 0,
+ "s2_regions": [
+  "alps_valais",
+  "atacama_andes",
+  "colorado_rockies",
+  "ladakh",
+  "norway_jotunheimen",
+  "nz_southern_alps"
+ ],
+ "s2_scenes": 24,
+ "darkrs_units": 86,
+ "exdark_units": 400,
+ "isaid_units": 138,
+ "downstream_n": 210,
+ "env": {
+  "platform": "Linux-7.2.11-1-cachyos-x86_64-with-glibc2.44",
+  "python": "3.12.13",
+  "cpu": "",
+  "cores": 12,
+  "torch": "2.15.0+cpu",
+  "cv2": "5.0.0",
+  "numpy": "2.5.4",
+  "gpu_used": false,
+  "note": "all methods run single process, 4 OpenMP threads, CPU only"
+ }
 }
