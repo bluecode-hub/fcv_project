@@ -43,7 +43,13 @@ class TASCv1:
         Y = np.clip(luminance(bands), EPS, 1.0)
         info = {}
 
-        g0 = exposure_gamma(Y, c.exp_q, c.t_white, c.mean_cap, c.gamma_min_global) if c.exposure else 1.0
+        if not c.exposure:
+            g0 = 1.0
+        elif c.exposure_mode == "mean_tau":
+            m = float(np.clip(Y.mean(), 1e-3, 0.999))
+            g0 = float(np.clip(np.log(c.tau_fixed) / np.log(m), c.gamma_min_global, 1.0))
+        else:
+            g0 = exposure_gamma(Y, c.exp_q, c.t_white, c.mean_cap, c.gamma_min_global)
         Y1 = Y ** g0
         info["g0"] = g0
         gamma = np.full(Y.shape, g0, np.float32)

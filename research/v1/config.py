@@ -9,6 +9,8 @@ from dataclasses import dataclass, asdict, replace
 class V1Config:
     # ---- Component 1: adaptive global exposure (highlight-anchored gamma with a mean ceiling)
     exposure: bool = True
+    exposure_mode: str = "highlight"   # "highlight" (v1) or "mean_tau" (v0-style fixed-target rule, ablation only)
+    tau_fixed: float = 0.55
     exp_q: float = 95.0          # percentile of luminance that is mapped to the white target
     t_white: float = 0.75        # target level of that percentile
     mean_cap: float = 0.50       # the global gamma never makes mean(Y) exceed this

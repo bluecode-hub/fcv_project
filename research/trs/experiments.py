@@ -166,3 +166,60 @@ def metric_d2_sam(out, s):
     r["sam_vs_gt"], r["sam_vs_input"] = r["vsgt_sam"], r["vsinp_sam"]
     r["ndvi_mae_vs_gt"] = r["vsgt_ndvi_mae"]
     return r
+
+
+# ------------------------------------------------------------------ Phase 4: TASC-v1 method sets (frozen v0 kept as reference)
+def _p4_common(device="cpu"):
+    """Only the v0 reference rows are recomputed (Identity too, as a cross-check of the Phase 3 store); all other baselines
+    (Zero-DCE, CLAHE, global gamma ...) are read from the Phase 3 stores, which use identical sample keys and inputs."""
+    return {"Identity": lambda s: s["bands"].copy(),
+            "TASC-v0": lambda s: run_tasc(s["bands"], dict(use_dem=False)),
+            "TASC-v0/no-global-exposure": lambda s: run_tasc(s["bands"], dict(use_dem=False, global_exposure=False))}
+
+
+def p4_rgb_methods(device="cpu"):
+    """AID / iSAID-dark / DarkRS / ExDark: image-only methods (no DEM)."""
+    from ..v1.registry import v1_methods
+    M = _p4_common(device)
+    M.update(v1_methods(include_ablations=True, dem=False))
+    return M
+
+
+def p4_s2_methods(device="cpu"):
+    """Sentinel-2 + GLO-30: samples carry the context-aware shadow field S plus control fields (wrong / shifted / sun)."""
+    from ..v1.registry import v1_methods
+    from ..v1.config import CANDIDATES, variant
+    from ..v1.method import TASCv1
+    M = _p4_common(device)
+    M["TASC-v0-DEM"] = MT._tasc({})
+    M.update(v1_methods(include_ablations=True, dem=True))
+    c3 = CANDIDATES["C3_local_dem"]
+    for lab, key in [("wrong-DEM", "wrong"), ("shift300m", "shift30"), ("shift1km", "shift100"),
+                     ("az+15", "az+15"), ("az-15", "az-15"), ("el+7", "el+7"), ("el-7", "el-7")]:
+        M[f"C3/{lab}"] = (lambda key: (lambda s: TASCv1(variant(c3))(s["bands"], S=s[key])))(key)
+    return M
+
+
+def p4_d2_methods(device="cpu"):
+    """Landsat D2 (GT available): v0 reference + v1 candidates with the DEM/sun inputs and geometry controls."""
+    from ..v1.config import CANDIDATES, variant
+    from ..v1.method import TASCv1
+    from tasc.method import TASCGamma
+    M = _p4_common(device)
+    M["TASC-v0-DEM"] = lambda s: TASCGamma()(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
+    M["C1_exposure"] = lambda s: TASCv1(variant(CANDIDATES["C1_exposure"]))(s["bands"])
+    M["C2_local_image"] = lambda s: TASCv1(variant(CANDIDATES["C2_local_image"]))(s["bands"])
+    c3 = CANDIDATES["C3_local_dem"]
+    M["C3_local_dem"] = lambda s: TASCv1(variant(c3))(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
+    M["C3/no-trust"] = lambda s: TASCv1(variant(c3, rho0=-2.0, rho1=-1.99))(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
+    M["C3/+DCT-detail"] = lambda s: TASCv1(variant(c3, detail=True))(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
+    M["C3/per-band"] = lambda s: TASCv1(variant(c3, shared_gain=False))(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
+    M["C3/no-exposure"] = lambda s: TASCv1(variant(c3, exposure=False))(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
+    for px in (4, 16):
+        M[f"C3/shift{px}px"] = (lambda px: (lambda s: TASCv1(variant(c3))(
+            s["bands"], np.roll(s["dem"], px, axis=1), s["dx"], s["sun_az"], s["sun_el"])))(px)
+    M["C3/flipped-DEM"] = lambda s: TASCv1(variant(c3))(s["bands"], s["dem"][::-1].copy(), s["dx"], s["sun_az"], s["sun_el"])
+    for lab, da, de in [("az+15", 15, 0), ("az+45", 45, 0), ("el+7", 0, 7), ("el-7", 0, -7)]:
+        M[f"C3/{lab}"] = (lambda da, de: (lambda s: TASCv1(variant(c3))(
+            s["bands"], s["dem"], s["dx"], (s["sun_az"] + da) % 360, float(np.clip(s["sun_el"] + de, 3, 85)))))(da, de)
+    return M

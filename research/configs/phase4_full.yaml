@@ -1,0 +1,22 @@
+# Phase 4 final evaluation. Frozen selection in research/reports/phase4_dev_selection.md (written BEFORE this runs).
+seed: 20261101
+workers: 2                 # PyTorch-heavy / high-res work: never more than 2 (earlier sessions were OOM-killed)
+workers_highres: 1
+device: cpu
+frozen_tag: TASC-v0
+selected_candidate: null   # filled from phase4_dev_selection.md by the orchestrator (C1_exposure | C2_local_image | C3_local_dem)
+stages:
+  - preflight
+  - p4_landsat_d2
+  - p4_sentinel2
+  - p4_aid
+  - p4_isaid_dark
+  - p4_darkrs
+  - p4_exdark
+  - p4_downstream
+  - p4_efficiency
+aid: {per_class: 10, val_fraction: 0.3, degradations: [uniform, nonuniform, severe]}
+darkrs: {max_images: 86}
+isaid_dark: {max_test_images: 66}
+exdark: {max_images: 400}
+memory: {service_high: 9G, service_max: 11G, tile: 512}
