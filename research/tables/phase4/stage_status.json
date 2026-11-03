@@ -1,0 +1,90 @@
+{
+ "preflight": {
+  "state": "done",
+  "seconds": 0.0,
+  "result": {
+   "mount": "/run/media/ayaan/New Volume",
+   "root": "/run/media/ayaan/New Volume/TASC_Research",
+   "free_gb": 115.6,
+   "selection_committed": "8e9db0a07eb11ee621b3d2bc4c58457136d8e174",
+   "branch": "research/tasc-v1-phase4",
+   "commit": "8e9db0a07eb11ee621b3d2bc4c58457136d8e174",
+   "tests": "47 passed in 285.27s (0:04:45)",
+   "mem_available_mb": 8539
+  }
+ },
+ "p4_landsat_d2": {
+  "state": "done",
+  "seconds": 0.0,
+  "result": {
+   "ok": 1140,
+   "fail": 0,
+   "spectral_ok": 1140,
+   "spectral_fail": 0,
+   "methods": 19
+  }
+ },
+ "p4_sentinel2": {
+  "state": "done",
+  "seconds": 0.0,
+  "result": {
+   "scenes": 24,
+   "ok": 5184,
+   "fail": 0
+  }
+ },
+ "p4_aid": {
+  "state": "done",
+  "seconds": 0.0,
+  "result": {
+   "ok": 7560,
+   "fail": 0,
+   "methods": 12
+  }
+ },
+ "p4_isaid_dark": {
+  "state": "done",
+  "seconds": 0.0,
+  "result": {
+   "val": [
+    792,
+    0
+   ],
+   "highpixel": [
+    864,
+    0
+   ]
+  }
+ },
+ "p4_darkrs": {
+  "state": "done",
+  "seconds": 0.0,
+  "result": {
+   "ok": 1032,
+   "fail": 0
+  }
+ },
+ "p4_exdark": {
+  "state": "done",
+  "seconds": 0.0,
+  "result": {
+   "ok": 4800,
+   "fail": 0
+  }
+ },
+ "p4_downstream": {
+  "state": "done",
+  "seconds": 0.0,
+  "result": {
+   "status": "ok",
+   "n_test": 210
+  }
+ },
+ "p4_efficiency": {
+  "state": "done",
+  "seconds": 0.0,
+  "result": {
+   "n": 12
+  }
+ }
+}

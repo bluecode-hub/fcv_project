@@ -1,0 +1,97 @@
+{
+ "reproducibility_check_v0_vs_phase3": {
+  "aid": {
+   "TASC-v0:psnr": {
+    "n": 630,
+    "max_abs_diff": 0.0
+   },
+   "Identity:psnr": {
+    "n": 630,
+    "max_abs_diff": 0.0
+   }
+  },
+  "isaid": {
+   "TASC-v0:psnr": {
+    "n": 138,
+    "max_abs_diff": 0.0
+   },
+   "Identity:psnr": {
+    "n": 138,
+    "max_abs_diff": 0.0
+   }
+  },
+  "darkrs": {
+   "TASC-v0:entropy": {
+    "n": 86,
+    "max_abs_diff": 0.0
+   },
+   "Identity:entropy": {
+    "n": 86,
+    "max_abs_diff": 0.0
+   }
+  },
+  "exdark": {
+   "TASC-v0:entropy": {
+    "n": 400,
+    "max_abs_diff": 0.0
+   },
+   "Identity:entropy": {
+    "n": 400,
+    "max_abs_diff": 0.0
+   }
+  },
+  "d2": {
+   "TASC-v0-DEM:psnr": {
+    "n": 60,
+    "max_abs_diff": 0.0
+   },
+   "Identity:psnr": {
+    "n": 60,
+    "max_abs_diff": 0.0
+   }
+  },
+  "s2": {
+   "TASC-v0:lift_shadow": {
+    "n": 212,
+    "max_abs_diff": 0.0
+   },
+   "TASC-v0-DEM:lift_shadow": {
+    "n": 212,
+    "max_abs_diff": 0.0
+   },
+   "Identity:lift_shadow": {
+    "n": 212,
+    "max_abs_diff": 0.0
+   }
+  }
+ },
+ "coverage": {
+  "aid": {
+   "rows": 16380,
+   "methods": 26
+  },
+  "isaid": {
+   "rows": 3036,
+   "methods": 22
+  },
+  "darkrs": {
+   "rows": 1892,
+   "methods": 22
+  },
+  "exdark": {
+   "rows": 8800,
+   "methods": 22
+  },
+  "d2": {
+   "rows": 2700,
+   "methods": 45
+  },
+  "s2": {
+   "rows": 10800,
+   "methods": 50
+  },
+  "downstream": {
+   "rows": 45
+  }
+ }
+}

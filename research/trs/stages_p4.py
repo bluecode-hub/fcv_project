@@ -128,37 +128,76 @@ def stage_downstream(cfg, log, device="cpu"):
     return dict(status="ok", n_test=len(test))
 
 
+EFF_METHODS = ["Identity", "GlobalGamma", "GlobalGamma-perband", "CLAHE", "Zero-DCE", "TASC-v0", "TASC-v0-DEM", "C1_exposure",
+               "C2_local_image", "C2b_gated_exposure", "C3_local_dem", "C2/+DCT-detail", "C2/per-band"]
+
+
 def stage_efficiency(cfg, log):
+    """CPU only, 1024x1024 image, one fresh process per method, min of 3 timed runs after a warm-up; peak memory = VmHWM of the
+    child (reset at exec — the Phase 3 probe read ru_maxrss, which is inherited from the parent and was identical for all methods)."""
     import glob, subprocess, sys, platform
     img = sorted(glob.glob(str(paths.ds("darkrs") / "extracted" / "**" / "*.jp*g"), recursive=True))
     if not img:
         raise FileNotFoundError("no DarkRS image for the efficiency probe")
     out = paths.out_dir("p4_efficiency")
     rows = []
-    for m in E.p4_rgb_methods("cpu"):
+    for m in EFF_METHODS:
         r = subprocess.run([sys.executable, "-m", "research.trs.stages_p4", m, img[0]], capture_output=True, text=True,
                            cwd=str(paths.REPO), env={"OMP_NUM_THREADS": "4", "PATH": "/usr/bin:/bin", "HOME": "/tmp"})
         try:
-            rows.append(json.loads(r.stdout.strip().splitlines()[-1])); log(f"  {m}: {rows[-1]['ms_per_mp']:.0f} ms/MP, {rows[-1]['peak_rss_mb']:.0f} MB")
+            rows.append(json.loads(r.stdout.strip().splitlines()[-1])); log(f"  {m}: {rows[-1]['ms_per_mp']:.0f} ms/MP, peak {rows[-1]['peak_mb']:.0f} MB")
         except Exception:
             rows.append(dict(method=m, status="fail", err=r.stderr[-200:]))
-    json.dump(dict(env=dict(platform=platform.platform(), cpu_only=True, threads=4), rows=rows), open(out / "efficiency.json", "w"), indent=1)
+    json.dump(dict(env=dict(platform=platform.platform(), cpu_only=True, threads=4, size="1024x1024"), rows=rows), open(out / "efficiency.json", "w"), indent=1)
     return dict(n=len(rows))
 
 
+def _hwm_mb():
+    for line in open("/proc/self/status"):
+        if line.startswith("VmHWM"):
+            return int(line.split()[1]) / 1024
+    return float("nan")
+
+
+def _build_one(name):
+    from . import methods as MT
+    from ..v1.config import CANDIDATES, variant
+    from ..v1.method import TASCv1
+    from .adapter import run_tasc
+    if name == "Identity":
+        return lambda s: s["bands"].copy()
+    if name == "Zero-DCE":
+        return MT.ZeroDCETorch(device="cpu")
+    cl = MT.classical_methods()
+    if name in cl:
+        return cl[name]
+    if name == "TASC-v0":
+        return lambda s: run_tasc(s["bands"], dict(use_dem=False))
+    if name == "TASC-v0-DEM":
+        from tasc.method import TASCGamma
+        return lambda s: TASCGamma()(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
+    c2 = CANDIDATES["C2_local_image"]
+    if name == "C3_local_dem":
+        return lambda s: TASCv1(variant(CANDIDATES["C3_local_dem"]))(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
+    cfgs = {"C1_exposure": CANDIDATES["C1_exposure"], "C2_local_image": c2, "C2/+DCT-detail": variant(c2, detail=True),
+            "C2/per-band": variant(c2, shared_gain=False),
+            "C2b_gated_exposure": variant(c2, adequate_hi=0.60, adequate_lo=0.40, t_white=0.75, mean_cap=0.6)}
+    return lambda s: TASCv1(variant(cfgs[name]))(s["bands"])
+
+
 def _eff_child(method, img_path):
-    """One method per fresh process; only that method is constructed (the Phase 3 probe built every method, including
-    Zero-DCE, in each child, so all rows reported the same peak RSS — fixed here)."""
-    import resource, time, cv2
+    import time, cv2
+    from scipy.ndimage import gaussian_filter
     im = cv2.resize(cv2.imread(img_path).astype(np.float32) / 255.0, (1024, 1024), interpolation=cv2.INTER_AREA)
-    f = E.p4_rgb_methods("cpu")[method]
-    s = dict(bands=im)
+    rng = np.random.default_rng(0)
+    s = dict(bands=im, dem=(gaussian_filter(rng.normal(0, 1, (1024, 1024)), 40) * 300 + 1500).astype(np.float32), dx=10.0, sun_az=150.0, sun_el=30.0)
+    f = _build_one(method)
+    base = _hwm_mb()
     f(s)
     ts = []
     for _ in range(3):
         t = time.perf_counter(); f(s); ts.append(time.perf_counter() - t)
-    print(json.dumps(dict(method=method, ms_per_mp=1e3 * min(ts) / (im.shape[0] * im.shape[1] / 1e6),
-                          peak_rss_mb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024)))
+    print(json.dumps(dict(method=method, ms_per_mp=1e3 * min(ts) / 1.048576, peak_mb=_hwm_mb(), baseline_mb=base, needs_dem=method in ("C3_local_dem", "TASC-v0-DEM"))))
 
 
 if __name__ == "__main__":

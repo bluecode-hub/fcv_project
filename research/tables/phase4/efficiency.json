@@ -1,0 +1,101 @@
+{
+ "env": {
+  "platform": "Linux-7.2.11-1-cachyos-x86_64-with-glibc2.44",
+  "cpu_only": true,
+  "threads": 4,
+  "size": "1024x1024"
+ },
+ "rows": [
+  {
+   "method": "Identity",
+   "ms_per_mp": 0.502443316119372,
+   "peak_mb": 151.03515625,
+   "baseline_mb": 151.03515625,
+   "needs_dem": false
+  },
+  {
+   "method": "GlobalGamma",
+   "ms_per_mp": 46.61908530739778,
+   "peak_mb": 179.07421875,
+   "baseline_mb": 151.0390625,
+   "needs_dem": false
+  },
+  {
+   "method": "GlobalGamma-perband",
+   "ms_per_mp": 21.505761144124946,
+   "peak_mb": 166.1015625,
+   "baseline_mb": 150.90625,
+   "needs_dem": false
+  },
+  {
+   "method": "CLAHE",
+   "ms_per_mp": 13.55010890990993,
+   "peak_mb": 167.18359375,
+   "baseline_mb": 150.7890625,
+   "needs_dem": false
+  },
+  {
+   "method": "Zero-DCE",
+   "ms_per_mp": 31787.562171939346,
+   "peak_mb": 1748.94921875,
+   "baseline_mb": 324.30859375,
+   "needs_dem": false
+  },
+  {
+   "method": "TASC-v0",
+   "ms_per_mp": 109.46282005819263,
+   "peak_mb": 217.87109375,
+   "baseline_mb": 150.671875,
+   "needs_dem": false
+  },
+  {
+   "method": "TASC-v0-DEM",
+   "ms_per_mp": 218.35441779693988,
+   "peak_mb": 246.6015625,
+   "baseline_mb": 150.6640625,
+   "needs_dem": true
+  },
+  {
+   "method": "C1_exposure",
+   "ms_per_mp": 115.08084869077396,
+   "peak_mb": 206.35546875,
+   "baseline_mb": 150.8125,
+   "needs_dem": false
+  },
+  {
+   "method": "C2_local_image",
+   "ms_per_mp": 550.2496109033306,
+   "peak_mb": 310.5078125,
+   "baseline_mb": 150.796875,
+   "needs_dem": false
+  },
+  {
+   "method": "C2b_gated_exposure",
+   "ms_per_mp": 502.46520805902196,
+   "peak_mb": 310.796875,
+   "baseline_mb": 150.76171875,
+   "needs_dem": false
+  },
+  {
+   "method": "C3_local_dem",
+   "ms_per_mp": 742.7904481840942,
+   "peak_mb": 310.984375,
+   "baseline_mb": 150.8046875,
+   "needs_dem": true
+  },
+  {
+   "method": "C2/+DCT-detail",
+   "ms_per_mp": 569.3259878189472,
+   "peak_mb": 311.58984375,
+   "baseline_mb": 150.7265625,
+   "needs_dem": false
+  },
+  {
+   "method": "C2/per-band",
+   "ms_per_mp": 525.0122995376083,
+   "peak_mb": 310.73828125,
+   "baseline_mb": 150.9921875,
+   "needs_dem": false
+  }
+ ]
+}

@@ -1,0 +1,253 @@
+[10:15:06] [preflight] start
+[10:19:52] [p4_landsat_d2] start
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+[10:20:11]     10 samples, 190 ok / 0 fail, 19s
+[10:20:23]     20 samples, 380 ok / 0 fail, 31s
+[10:20:35]     30 samples, 570 ok / 0 fail, 43s
+[10:20:47]     40 samples, 760 ok / 0 fail, 55s
+[10:21:00]     50 samples, 950 ok / 0 fail, 68s
+[10:21:12]     60 samples, 1140 ok / 0 fail, 80s
+[10:21:28]     10 samples, 190 ok / 0 fail, 16s
+[10:21:43]     20 samples, 380 ok / 0 fail, 30s
+[10:21:57]     30 samples, 570 ok / 0 fail, 45s
+[10:22:12]     40 samples, 760 ok / 0 fail, 59s
+[10:22:27]     50 samples, 950 ok / 0 fail, 74s
+[10:22:41]     60 samples, 1140 ok / 0 fail, 88s
+[10:22:41] [p4_sentinel2] start
+[10:26:35]   scene alps_valais_20231011: 216 rows
+[10:26:38]   scene alps_valais_20221026: 216 rows
+[10:30:37]   scene alps_valais_20231225: 216 rows
+[10:30:41]   scene alps_valais_20240203: 216 rows
+[10:33:39]   scene atacama_andes_20230622: 216 rows
+[10:33:44]   scene atacama_andes_20240616: 216 rows
+[10:36:39]   scene atacama_andes_20240706: 216 rows
+[10:36:44]   scene atacama_andes_20250611: 216 rows
+[10:40:17]   scene colorado_rockies_20211202: 216 rows
+[10:40:20]   scene colorado_rockies_20201207: 216 rows
+/home/ayaan/Desktop/Projects/FCV/fcv_project/tasc/metrics.py:62: RuntimeWarning: invalid value encountered in scalar divide
+  rhat = np.mean(np.abs(v)) ** 2 / np.mean(v ** 2)
+[10:43:49]   scene colorado_rockies_20251111: 216 rows
+[10:44:22]   scene colorado_rockies_20251231: 216 rows
+[10:47:47]   scene ladakh_20221225: 216 rows
+[10:48:15]   scene ladakh_20231210: 216 rows
+[10:51:33]   scene ladakh_20241204: 216 rows
+[10:52:05]   scene ladakh_20251224: 216 rows
+[10:55:57]   scene norway_jotunheimen_20191105: 216 rows
+[10:56:37]   scene norway_jotunheimen_20221119: 216 rows
+[10:59:46]   scene norway_jotunheimen_20230120: 216 rows
+[11:00:21]   scene norway_jotunheimen_20251125: 216 rows
+[11:03:34]   scene nz_southern_alps_20190706: 216 rows
+/home/ayaan/Desktop/Projects/FCV/fcv_project/tasc/metrics.py:62: RuntimeWarning: invalid value encountered in scalar divide
+  rhat = np.mean(np.abs(v)) ** 2 / np.mean(v ** 2)
+[11:04:09]   scene nz_southern_alps_20210710: 216 rows
+[11:07:23]   scene nz_southern_alps_20220526: 216 rows
+[11:07:56]   scene nz_southern_alps_20220630: 216 rows
+[11:07:56] [p4_aid] start
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+[11:08:21]     10 samples, 120 ok / 0 fail, 25s
+[11:08:42]     20 samples, 240 ok / 0 fail, 46s
+[11:09:06]     30 samples, 360 ok / 0 fail, 70s
+[11:09:27]     40 samples, 480 ok / 0 fail, 91s
+[11:09:47]     50 samples, 600 ok / 0 fail, 111s
+[11:10:07]     60 samples, 720 ok / 0 fail, 132s
+[11:10:28]     70 samples, 840 ok / 0 fail, 152s
+[11:10:48]     80 samples, 960 ok / 0 fail, 173s
+[11:11:08]     90 samples, 1080 ok / 0 fail, 193s
+[11:11:29]     100 samples, 1200 ok / 0 fail, 214s
+[11:11:50]     110 samples, 1320 ok / 0 fail, 234s
+[11:12:10]     120 samples, 1440 ok / 0 fail, 254s
+[11:12:30]     130 samples, 1560 ok / 0 fail, 274s
+[11:12:50]     140 samples, 1680 ok / 0 fail, 294s
+[11:13:11]     150 samples, 1800 ok / 0 fail, 315s
+[11:13:31]     160 samples, 1920 ok / 0 fail, 336s
+[11:13:52]     170 samples, 2040 ok / 0 fail, 357s
+[11:14:13]     180 samples, 2160 ok / 0 fail, 377s
+[11:14:34]     190 samples, 2280 ok / 0 fail, 399s
+[11:14:55]     200 samples, 2400 ok / 0 fail, 420s
+[11:15:16]     210 samples, 2520 ok / 0 fail, 441s
+[11:15:38]     220 samples, 2640 ok / 0 fail, 462s
+[11:16:00]     230 samples, 2760 ok / 0 fail, 484s
+[11:16:21]     240 samples, 2880 ok / 0 fail, 505s
+[11:16:43]     250 samples, 3000 ok / 0 fail, 527s
+[11:17:05]     260 samples, 3120 ok / 0 fail, 549s
+[11:17:27]     270 samples, 3240 ok / 0 fail, 571s
+[11:17:49]     280 samples, 3360 ok / 0 fail, 593s
+[11:18:10]     290 samples, 3480 ok / 0 fail, 614s
+[11:18:30]     300 samples, 3600 ok / 0 fail, 634s
+[11:18:50]     310 samples, 3720 ok / 0 fail, 655s
+[11:19:10]     320 samples, 3840 ok / 0 fail, 675s
+[11:19:30]     330 samples, 3960 ok / 0 fail, 694s
+[11:19:51]     340 samples, 4080 ok / 0 fail, 715s
+[11:20:11]     350 samples, 4200 ok / 0 fail, 736s
+[11:20:31]     360 samples, 4320 ok / 0 fail, 755s
+[11:20:52]     370 samples, 4440 ok / 0 fail, 776s
+[11:21:13]     380 samples, 4560 ok / 0 fail, 797s
+[11:21:34]     390 samples, 4680 ok / 0 fail, 818s
+[11:21:57]     400 samples, 4800 ok / 0 fail, 842s
+[11:22:19]     410 samples, 4920 ok / 0 fail, 863s
+[11:22:40]     420 samples, 5040 ok / 0 fail, 884s
+[11:23:02]     430 samples, 5160 ok / 0 fail, 906s
+[11:23:24]     440 samples, 5280 ok / 0 fail, 929s
+[11:23:47]     450 samples, 5400 ok / 0 fail, 951s
+[11:24:09]     460 samples, 5520 ok / 0 fail, 973s
+[11:24:29]     470 samples, 5640 ok / 0 fail, 994s
+[11:24:50]     480 samples, 5760 ok / 0 fail, 1014s
+[11:25:11]     490 samples, 5880 ok / 0 fail, 1036s
+[11:25:31]     500 samples, 6000 ok / 0 fail, 1056s
+[11:25:51]     510 samples, 6120 ok / 0 fail, 1076s
+[11:26:13]     520 samples, 6240 ok / 0 fail, 1097s
+[11:26:33]     530 samples, 6360 ok / 0 fail, 1118s
+[11:26:53]     540 samples, 6480 ok / 0 fail, 1137s
+[11:27:13]     550 samples, 6600 ok / 0 fail, 1158s
+[11:27:33]     560 samples, 6720 ok / 0 fail, 1178s
+[11:27:54]     570 samples, 6840 ok / 0 fail, 1198s
+[11:28:16]     580 samples, 6960 ok / 0 fail, 1221s
+[11:28:38]     590 samples, 7080 ok / 0 fail, 1243s
+[11:29:00]     600 samples, 7200 ok / 0 fail, 1264s
+[11:29:22]     610 samples, 7320 ok / 0 fail, 1287s
+[11:29:45]     620 samples, 7440 ok / 0 fail, 1309s
+[11:30:07]     630 samples, 7560 ok / 0 fail, 1331s
+[11:30:08] [p4_isaid_dark] start
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+[11:30:28]     10 samples, 120 ok / 0 fail, 20s
+[11:30:44]     20 samples, 240 ok / 0 fail, 37s
+[11:31:01]     30 samples, 360 ok / 0 fail, 53s
+[11:31:18]     40 samples, 480 ok / 0 fail, 70s
+[11:31:36]     50 samples, 600 ok / 0 fail, 88s
+[11:31:54]     60 samples, 720 ok / 0 fail, 106s
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/ayaan/venvs/tasc/lib/python3.12/site-packages/torchvision/models/_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+[11:36:29]     10 samples, 120 ok / 0 fail, 265s
+[11:40:55]     20 samples, 240 ok / 0 fail, 531s
+[11:45:30]     30 samples, 360 ok / 0 fail, 806s
+[11:49:49]     40 samples, 480 ok / 0 fail, 1065s
+[11:54:20]     50 samples, 600 ok / 0 fail, 1336s
+[11:58:50]     60 samples, 720 ok / 0 fail, 1606s
+[12:03:19]     70 samples, 840 ok / 0 fail, 1875s
+[12:04:14] [p4_darkrs] start
+[12:05:48]     10 samples, 120 ok / 0 fail, 95s
+[12:07:24]     20 samples, 240 ok / 0 fail, 190s
+[12:09:00]     30 samples, 360 ok / 0 fail, 287s
+[12:10:39]     40 samples, 480 ok / 0 fail, 385s
+[12:12:12]     50 samples, 600 ok / 0 fail, 478s
+[12:13:48]     60 samples, 720 ok / 0 fail, 575s
+[12:15:18]     70 samples, 840 ok / 0 fail, 664s
+[12:16:48]     80 samples, 960 ok / 0 fail, 754s
+[12:17:37] [p4_exdark] start
+/home/ayaan/Desktop/Projects/FCV/fcv_project/tasc/metrics.py:62: RuntimeWarning: invalid value encountered in scalar divide
+  rhat = np.mean(np.abs(v)) ** 2 / np.mean(v ** 2)
+[12:18:18]     10 samples, 120 ok / 0 fail, 42s
+[12:18:55]     20 samples, 240 ok / 0 fail, 78s
+[12:19:32]     30 samples, 360 ok / 0 fail, 115s
+[12:19:59]     40 samples, 480 ok / 0 fail, 142s
+[12:20:23]     50 samples, 600 ok / 0 fail, 166s
+[12:20:48]     60 samples, 720 ok / 0 fail, 192s
+[12:21:19]     70 samples, 840 ok / 0 fail, 222s
+[12:21:56]     80 samples, 960 ok / 0 fail, 259s
+[12:22:24]     90 samples, 1080 ok / 0 fail, 288s
+[12:22:51]     100 samples, 1200 ok / 0 fail, 314s
+[12:23:26]     110 samples, 1320 ok / 0 fail, 350s
+[12:24:08]     120 samples, 1440 ok / 0 fail, 391s
+[12:24:39]     130 samples, 1560 ok / 0 fail, 423s
+[12:25:13]     140 samples, 1680 ok / 0 fail, 456s
+[12:25:41]     150 samples, 1800 ok / 0 fail, 484s
+[12:26:19]     160 samples, 1920 ok / 0 fail, 523s
+[12:26:42]     170 samples, 2040 ok / 0 fail, 546s
+[12:27:17]     180 samples, 2160 ok / 0 fail, 580s
+[12:27:57]     190 samples, 2280 ok / 0 fail, 620s
+[12:28:37]     200 samples, 2400 ok / 0 fail, 661s
+[12:29:19]     210 samples, 2520 ok / 0 fail, 702s
+[12:30:00]     220 samples, 2640 ok / 0 fail, 743s
+[12:30:29]     230 samples, 2760 ok / 0 fail, 772s
+[12:31:08]     240 samples, 2880 ok / 0 fail, 811s
+[12:31:31]     250 samples, 3000 ok / 0 fail, 835s
+[12:31:57]     260 samples, 3120 ok / 0 fail, 861s
+[12:32:43]     270 samples, 3240 ok / 0 fail, 907s
+[12:33:07]     280 samples, 3360 ok / 0 fail, 930s
+[12:33:37]     290 samples, 3480 ok / 0 fail, 960s
+[12:34:10]     300 samples, 3600 ok / 0 fail, 994s
+[12:34:37]     310 samples, 3720 ok / 0 fail, 1020s
+[12:35:13]     320 samples, 3840 ok / 0 fail, 1057s
+[12:35:46]     330 samples, 3960 ok / 0 fail, 1089s
+[12:36:12]     340 samples, 4080 ok / 0 fail, 1115s
+[12:36:50]     350 samples, 4200 ok / 0 fail, 1153s
+[12:37:14]     360 samples, 4320 ok / 0 fail, 1177s
+[12:37:52]     370 samples, 4440 ok / 0 fail, 1216s
+[12:38:21]     380 samples, 4560 ok / 0 fail, 1244s
+[12:39:00]     390 samples, 4680 ok / 0 fail, 1284s
+[12:39:32]     400 samples, 4800 ok / 0 fail, 1316s
+[12:39:32] [p4_downstream] start
+[12:40:37]   head trained on 900 clean images, train acc 1.000
+[12:41:09]   uniform    Identity                     acc=0.838
+[12:41:49]   uniform    TASC-v0                      acc=0.638
+[12:42:26]   uniform    TASC-v0/no-global-exposure   acc=0.800
+[12:43:12]   uniform    C1_exposure                  acc=0.833
+[12:44:23]   uniform    C2_local_image               acc=0.829
+[12:45:19]   uniform    C2/no-exposure               acc=0.838
+[12:46:01]   uniform    C2/no-local(=C1)             acc=0.833
+[12:47:16]   uniform    C2/no-chroma-cue             acc=0.829
+[12:48:23]   uniform    C2/+DCT-detail               acc=0.833
+[12:49:30]   uniform    C2/per-band                  acc=0.833
+[12:50:28]   uniform    C2/fixed-exposure-0.55       acc=0.819
+[12:51:28]   uniform    C2b_gated_exposure           acc=0.819
+[12:51:53]   nonuniform Identity                     acc=0.857
+[12:52:33]   nonuniform TASC-v0                      acc=0.705
+[12:53:09]   nonuniform TASC-v0/no-global-exposure   acc=0.800
+[12:53:52]   nonuniform C1_exposure                  acc=0.871
+[12:54:59]   nonuniform C2_local_image               acc=0.857
+[12:55:56]   nonuniform C2/no-exposure               acc=0.843
+[12:56:39]   nonuniform C2/no-local(=C1)             acc=0.871
+[12:57:55]   nonuniform C2/no-chroma-cue             acc=0.857
+[12:59:04]   nonuniform C2/+DCT-detail               acc=0.857
+[13:00:11]   nonuniform C2/per-band                  acc=0.852
+[13:01:08]   nonuniform C2/fixed-exposure-0.55       acc=0.819
+[13:02:09]   nonuniform C2b_gated_exposure           acc=0.838
+[13:02:32]   severe     Identity                     acc=0.581
+[13:03:03]   severe     TASC-v0                      acc=0.343
+[13:03:33]   severe     TASC-v0/no-global-exposure   acc=0.543
+[13:03:59]   severe     C1_exposure                  acc=0.648
+[13:04:49]   severe     C2_local_image               acc=0.648
+[13:05:43]   severe     C2/no-exposure               acc=0.538
+[13:06:11]   severe     C2/no-local(=C1)             acc=0.648
+[13:07:11]   severe     C2/no-chroma-cue             acc=0.648
+[13:08:05]   severe     C2/+DCT-detail               acc=0.648
+[13:08:58]   severe     C2/per-band                  acc=0.590
+[13:09:54]   severe     C2/fixed-exposure-0.55       acc=0.648
+[13:10:43]   severe     C2b_gated_exposure           acc=0.648
+[13:10:43] [p4_efficiency] start
+[13:10:44]   Identity: 0 ms/MP, 4570 MB
+[13:10:45]   TASC-v0: 111 ms/MP, 4570 MB
+[13:10:46]   TASC-v0/no-global-exposure: 109 ms/MP, 4570 MB
+[13:10:47]   C1_exposure: 114 ms/MP, 4570 MB
+[13:10:51]   C2_local_image: 976 ms/MP, 4570 MB
+[13:10:54]   C2/no-exposure: 477 ms/MP, 4570 MB
+[13:10:55]   C2/no-local(=C1): 115 ms/MP, 4570 MB
+[13:10:58]   C2/no-chroma-cue: 538 ms/MP, 4570 MB
+[13:11:01]   C2/+DCT-detail: 553 ms/MP, 4570 MB
+[13:11:03]   C2/per-band: 523 ms/MP, 4570 MB
+[13:11:06]   C2/fixed-exposure-0.55: 484 ms/MP, 4570 MB
+[13:11:09]   C2b_gated_exposure: 483 ms/MP, 4570 MB
+[13:11:09] phase 4 evaluation batch finished
