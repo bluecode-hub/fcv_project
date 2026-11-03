@@ -9,7 +9,8 @@ import sys
 from pathlib import Path
 
 MAN = Path(__file__).resolve().parents[1] / "manuscript"
-SRC = MAN / "first_draft.md"
+STEM = sys.argv[sys.argv.index("--src") + 1] if "--src" in sys.argv else "first_draft"
+SRC = MAN / f"{STEM}.md"
 BIB = MAN / "references.bib"
 
 ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
@@ -131,7 +132,7 @@ def to_tex(blocks):
          r"\hyphenation{Sentinel DarkRS ExDark}",
          r"\begin{document}",
          r"\title{" + tex_inline(title) + "}",
-         r"\author{\IEEEauthorblockN{[Authors to be added]}\IEEEauthorblockA{Draft manuscript generated from \texttt{research/manuscript/first\_draft.md}}}",
+         r"\author{\IEEEauthorblockN{[Authors to be added]}\IEEEauthorblockA{Manuscript generated from the Markdown source in \texttt{research/manuscript/}}}",
          r"\maketitle"]
     sec = None
     i = 0
@@ -380,8 +381,8 @@ def to_html(blocks, eqdir):
 
 def main():
     blocks = parse(SRC.read_text())
-    (MAN / "first_draft.tex").write_text(to_tex(blocks))
-    print("wrote first_draft.tex")
+    (MAN / f"{STEM}.tex").write_text(to_tex(blocks))
+    print(f"wrote {STEM}.tex")
     cites = cite_order(blocks)
     ent = parse_bib()
     missing = [c for c in cites if c not in ent]
@@ -392,9 +393,9 @@ def main():
         return
     import weasyprint
     page, _ = to_html(blocks, MAN / "_eq")
-    (MAN / "_first_draft.html").write_text(page)
-    weasyprint.HTML(string=page, base_url=str(MAN)).write_pdf(MAN / "first_draft.pdf")
-    print("wrote first_draft.pdf")
+    (MAN / f"_{STEM}.html").write_text(page)
+    weasyprint.HTML(string=page, base_url=str(MAN)).write_pdf(MAN / f"{STEM}.pdf")
+    print(f"wrote {STEM}.pdf")
 
 
 if __name__ == "__main__":
