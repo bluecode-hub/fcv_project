@@ -1,0 +1,18 @@
+scene alps_valais_20221026 9 tiles
+scene alps_valais_20231011 9 tiles
+scene alps_valais_20231225 9 tiles
+scene alps_valais_20240203 9 tiles
+scene atacama_andes_20230622 9 tiles
+scene atacama_andes_20240616 9 tiles
+scene atacama_andes_20240706 9 tiles
+scene atacama_andes_20250611 9 tiles
+scene colorado_rockies_20201207 9 tiles
+scene colorado_rockies_20211202 9 tiles
+/home/ayaan/Desktop/Projects/FCV/fcv_project/tasc/metrics.py:62: RuntimeWarning: invalid value encountered in scalar divide
+  rhat = np.mean(np.abs(v)) ** 2 / np.mean(v ** 2)
+scene colorado_rockies_20251111 9 tiles
+scene colorado_rockies_20251231 9 tiles
+scene ladakh_20221225 9 tiles
+scene ladakh_20231210 9 tiles
+scene ladakh_20241204 9 tiles
+scene ladakh_20251224 9 tiles

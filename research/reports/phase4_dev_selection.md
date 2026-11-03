@@ -62,3 +62,35 @@ Shadow PSNR vs C2 (image-only): correct DEM +0.48 dB [0.27, 0.68]; DEM shifted 2
 2. **DEM-assisted TASC-v1 = C3, conditional.** On synthetic terrain C3 beats C2 (+0.48 dB shadow PSNR, CI excludes 0) and is robust to wrong/shifted DEMs, but G5/G6 on real Landsat D2-val and Sentinel-2 dev data cannot be evaluated until the external drive is attached. C3 is advanced to the final evaluation only if those two dev gates pass; otherwise DEM guidance is reported as not demonstrated.
 3. DCT detail: **removed** (C2 + DCT: +0.02 dB on AID-val, −0.18 dB overall PSNR on the shadow test; v0 audit already showed no benefit).
 4. Per-band variant: not selected (changes spectra by construction); reported as an ablation.
+
+---
+# Addendum — real-terrain development gates (drive attached; Landsat D2 **val** and Sentinel-2 **dev** regions only)
+
+## Landsat D2-val (20 variants of **2** source crops — dependence and tiny n; CI unit = crop)
+| Method | PSNR | SSIM | LPIPS | shadow MAE |
+|---|---|---|---|---|
+| Identity | 8.77 | 0.377 | 0.513 | 0.450 |
+| TASC-v0 (image-only) | 19.30 | 0.566 | 0.322 | 0.131 |
+| **TASC-v0-DEM (Phase 3 reference)** | **20.09** | 0.577 | 0.310 | 0.118 |
+| C1 exposure | 13.41 | 0.482 | 0.447 | 0.352 |
+| C2 (frozen defaults) | 13.60 | 0.486 | 0.439 | 0.332 |
+| C3 (frozen defaults, DEM) | 13.65 | 0.487 | 0.438 | 0.327 |
+C2/C3 are **−6.5 dB** below TASC-v0-DEM (CI over 2 crops −9.8…−3.2). **G5 fails.** Diagnosis (clean D2 crops have mean luminance 0.48–0.55; my AID-motivated cap `mean_cap=0.35` stops the output at ≈0.35; the global gamma at its floor already flattens shadow contrast, leaving the local stage no evidence). Diagnostic (dev data only): with an uncapped exposure (t_white 0.75–0.8, cap 0.6–0.7) C1 = C2 = C3 = 19.1 dB — still 1.0 dB below TASC-v0-DEM, and the local stage and DEM add **nothing** (≤ 0.03 dB). DEM trust on D2-val was 0.0–0.73.
+
+## Iteration C2b (evidence-gated exposure; added beyond the three pre-registered candidates, flagged as post-hoc)
+Exposure applied with weight `w = smoothstep((adequate_hi − p95)/(adequate_hi − adequate_lo))`. Grid of 4 settings (`tables/phase4_dev/exposure_gate_grid.csv`): none satisfies G8 (|ΔY| on clean AID-val ≥ 0.031 vs the 0.02 limit) and none reaches v0 on D2-val (best 18.96 dB at |ΔY| = 0.061). The conflict between "AID images that are merely dark are adequate" and "D2 inputs are under-exposed" cannot be resolved by a single-image rule on these dev sets. C2b (hi 0.60, lo 0.40, t_white 0.75, cap 0.6) is kept as an extra *reported* row only.
+
+## Sentinel-2 dev regions (4 regions, region means; shadow/lit masks are DEM-derived **proxies**)
+(`tables/phase4_dev/real_s2_dev_regions.txt`) SAM / NDVI error / band-ratio deviation vs input = 0 for every shared-gain method (algebraic). Shadow lift: v0 0.193, v0-DEM 0.218, **C2 0.078, C3 0.081**; dark-lit/shadow lift ratio: v0 0.46, C2 0.40, C3 0.39. Material-matched equalisation gain: v0-DEM 0.039, C2 **+0.046**, C3 **−0.027**, C3/no-trust −0.144 (DEM guidance *worsens* proxy equalisation). Wrong-DEM and 1 km-shifted DEM give the same as image-only (trust mechanism works). **G6 (robustness) passes; no DEM benefit is demonstrated (real-terrain gain over image-only ≤ 0, and the proxy is circular).**
+
+## Final gate status and decision (frozen before test evaluation)
+| Gate | C2 | C3 |
+|---|---|---|
+| G1/G2 (AID-val) | pass | n/a |
+| G3 original / amended | fail / pass | – |
+| G4 spectral on real 4-band data | pass (0 by construction) | pass |
+| **G5 D2-val no regression** | **FAIL (−6.5 dB; −1.0 dB even with uncapped exposure)** | **FAIL** |
+| G6 robustness to wrong/shifted DEM | – | pass; benefit over image-only **not demonstrated** |
+| G7 natural-dark lift ≤ 50 % of v0 | pass | pass |
+| G8 adequate exposure | pass | pass |
+**Decision: no candidate passes the pre-registered development gate; TASC-v1 is NOT advanced as a validated successor to TASC-v0.** Per the plan, the frozen candidates (C2 image-only, C3 DEM-assisted, plus C2b and the ablations) are still evaluated on the final datasets as a *diagnostic* evaluation, and the manuscript will be framed as benchmark / failure analysis unless the results contradict this. No parameter changes after this commit.

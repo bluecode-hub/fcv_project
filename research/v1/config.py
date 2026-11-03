@@ -15,6 +15,8 @@ class V1Config:
     t_white: float = 0.55        # target level of that percentile (dev round 2; round 1 used 0.75, which lifted 72% of CLEAN images)
     mean_cap: float = 0.35       # the global gamma never makes mean(Y) exceed this (dev round 2)
     gamma_min_global: float = 0.35
+    adequate_hi: float | None = None   # evidence gate: exposure weight w=0 when the exposure percentile >= adequate_hi ...
+    adequate_lo: float | None = None   # ... and w=1 when <= adequate_lo (smoothstep between). None = gate off (C1-C3 behaviour)
     # ---- Component 2: shadow-vs-dark-material confidence and local lift
     local: bool = True
     ill_percentile: float = 80.0 # surround "lit level" = this percentile of smoothed luminance in a large window

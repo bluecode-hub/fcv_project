@@ -1,0 +1,4 @@
+{'hi': 0.55, 'lo': 0.35, 't_white': 0.65, 'mean_cap': 0.5, 'aid_clean_dY': np.float32(0.03135906), 'aid_deg_psnr': np.float64(15.630230879447206), 'aid_deg_ssim': np.float64(0.33962733241281023), 'd2_val_psnr': np.float64(17.810197281303882)}
+{'hi': 0.55, 'lo': 0.35, 't_white': 0.75, 'mean_cap': 0.6, 'aid_clean_dY': np.float32(0.041502748), 'aid_deg_psnr': np.float64(15.687916127841978), 'aid_deg_ssim': np.float64(0.3350962198235922), 'd2_val_psnr': np.float64(18.531810077840383)}
+{'hi': 0.6, 'lo': 0.4, 't_white': 0.65, 'mean_cap': 0.5, 'aid_clean_dY': np.float32(0.04303695), 'aid_deg_psnr': np.float64(15.80255689744277), 'aid_deg_ssim': np.float64(0.33918695453278447), 'd2_val_psnr': np.float64(18.329145252727248)}
+{'hi': 0.6, 'lo': 0.4, 't_white': 0.75, 'mean_cap': 0.6, 'aid_clean_dY': np.float32(0.060547538), 'aid_deg_psnr': np.float64(15.836037553759217), 'aid_deg_ssim': np.float64(0.33186711115003736), 'd2_val_psnr': np.float64(18.959760101742724)}

@@ -28,7 +28,7 @@ def _subsample(y: np.ndarray, n: int = 200_000) -> np.ndarray:
 
 
 def exposure_gamma(Y: np.ndarray, q: float = 95.0, t_white: float = 0.75, mean_cap: float = 0.50,
-                   g_min: float = 0.35) -> float:
+                   g_min: float = 0.35, adequate_hi=None, adequate_lo=None) -> float:
     y = np.clip(_subsample(np.asarray(Y, np.float64)), EPS, 1.0)
     if not np.isfinite(y).all() or y.size == 0:
         return 1.0
@@ -47,4 +47,9 @@ def exposure_gamma(Y: np.ndarray, q: float = 95.0, t_white: float = 0.75, mean_c
             else:
                 lo = mid
         g_mean = hi
-    return float(np.clip(max(g_hi, g_mean), g_min, 1.0))
+    g = float(np.clip(max(g_hi, g_mean), g_min, 1.0))
+    if adequate_hi is not None and adequate_lo is not None:
+        x = np.clip((adequate_hi - pq) / max(adequate_hi - adequate_lo, 1e-6), 0.0, 1.0)
+        w = x * x * (3 - 2 * x)          # evidence of under-exposure: 0 for adequately exposed images, 1 for clearly dark ones
+        g = 1.0 - w * (1.0 - g)
+    return float(g)

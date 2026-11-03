@@ -211,6 +211,7 @@ def p4_d2_methods(device="cpu"):
     M["C2_local_image"] = lambda s: TASCv1(variant(CANDIDATES["C2_local_image"]))(s["bands"])
     c3 = CANDIDATES["C3_local_dem"]
     M["C3_local_dem"] = lambda s: TASCv1(variant(c3))(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
+    M["C2b_gated_exposure"] = lambda s: TASCv1(variant(CANDIDATES["C2_local_image"], adequate_hi=0.60, adequate_lo=0.40, t_white=0.75, mean_cap=0.6))(s["bands"])
     M["C3/no-trust"] = lambda s: TASCv1(variant(c3, rho0=-2.0, rho1=-1.99))(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
     M["C3/+DCT-detail"] = lambda s: TASCv1(variant(c3, detail=True))(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])
     M["C3/per-band"] = lambda s: TASCv1(variant(c3, shared_gain=False))(s["bands"], s["dem"], s["dx"], s["sun_az"], s["sun_el"])

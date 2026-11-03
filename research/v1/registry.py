@@ -30,6 +30,8 @@ def v1_methods(include_ablations=True, dem=False):
             "C2/+DCT-detail": _mk(variant(c2, detail=True)),
             "C2/per-band": _mk(variant(c2, shared_gain=False)),
             "C2/fixed-exposure-0.55": _mk(variant(c2, exposure_mode="mean_tau")),
+            # post-hoc dev iteration (documented in phase4_dev_selection.md): evidence-gated exposure, tuned on AID-val + D2-val
+            "C2b_gated_exposure": _mk(variant(c2, adequate_hi=0.60, adequate_lo=0.40, t_white=0.75, mean_cap=0.6)),
         })
         if dem:
             c3 = CANDIDATES["C3_local_dem"]
