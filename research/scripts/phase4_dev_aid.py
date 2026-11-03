@@ -35,7 +35,7 @@ def main():
     ap.add_argument("--images", required=True); ap.add_argument("--out", required=True)
     ap.add_argument("--manifest", default=str(REPO / "research/dataset_manifests/aid_subset.json"))
     ap.add_argument("--lpips", action="store_true"); ap.add_argument("--zdce", action="store_true")
-    ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--limit", type=int, default=0); ap.add_argument("--only-v1", action="store_true"); ap.add_argument("--methods", default="")
     a = ap.parse_args()
     man = json.load(open(a.manifest))
     keys = sorted(k for k, v in man["split"].items() if v == "val")
@@ -48,6 +48,10 @@ def main():
     if out.exists():
         old = pd.read_csv(out); rows = old.to_dict("records"); done = set(zip(old["sample"], old["method"]))
     M = methods(a.zdce)
+    if a.only_v1:
+        M = {k: v for k, v in M.items() if k.startswith("C") and not k.startswith("CLAHE")}
+    if a.methods:
+        M = {k: v for k, v in M.items() if k in a.methods.split(",")}
     t0 = time.time()
     for i, k in enumerate(keys):
         gt = read_bgr(Path(a.images) / k)

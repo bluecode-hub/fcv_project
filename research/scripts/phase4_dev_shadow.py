@@ -56,4 +56,5 @@ def main(imgs, out):
     d = pd.DataFrame(rows); d.to_csv(out, index=False)
     print(d.groupby("method")[["psnr", "psnr_shadow", "mae_shadow", "psnr_lit", "lift_shadow", "lift_natdark", "lift_lit"]].mean().round(3).to_string())
 
-main(Path(sys.argv[1]), sys.argv[2])
+if __name__ == "__main__":
+    main(Path(sys.argv[1]), sys.argv[2])

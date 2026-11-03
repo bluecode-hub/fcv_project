@@ -9,7 +9,8 @@ def boot(d, n=10000, seed=0):
     return d.mean(), np.percentile(m, 2.5), np.percentile(m, 97.5)
 
 def main(csv, out_md=None):
-    df = pd.read_csv(csv); df = df[df.status == "ok"]
+    csvs = csv.split(",")      # later files override earlier rows with the same (sample, method)
+    df = pd.concat([pd.read_csv(c) for c in csvs]).drop_duplicates(["sample", "method"], keep="last"); df = df[df.status == "ok"]
     cols = [c for c in ["psnr", "ssim", "lpips", "psnr_y", "ssim_y", "mae_dark_in", "bright_clip_new", "halo", "noise_amp", "sec"] if c in df]
     per = df.groupby(["source", "method"])[cols].mean().reset_index()      # unit = source image
     piv = {c: per.pivot(index="source", columns="method", values=c) for c in cols}

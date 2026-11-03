@@ -12,16 +12,16 @@ class V1Config:
     exposure_mode: str = "highlight"   # "highlight" (v1) or "mean_tau" (v0-style fixed-target rule, ablation only)
     tau_fixed: float = 0.55
     exp_q: float = 95.0          # percentile of luminance that is mapped to the white target
-    t_white: float = 0.75        # target level of that percentile
-    mean_cap: float = 0.50       # the global gamma never makes mean(Y) exceed this
+    t_white: float = 0.55        # target level of that percentile (dev round 2; round 1 used 0.75, which lifted 72% of CLEAN images)
+    mean_cap: float = 0.35       # the global gamma never makes mean(Y) exceed this (dev round 2)
     gamma_min_global: float = 0.35
     # ---- Component 2: shadow-vs-dark-material confidence and local lift
     local: bool = True
     ill_percentile: float = 80.0 # surround "lit level" = this percentile of smoothed luminance in a large window
     ill_window_frac: float = 0.25  # window side as a fraction of the short image side
     sigma_frac: float = 0.006    # smoothing of the luminance used for the evidence (fraction of short side)
-    r_hi: float = 0.80           # Ys/L >= r_hi: no darkness evidence
-    r_lo: float = 0.35           # Ys/L <= r_lo: full darkness evidence
+    r_hi: float = 0.65           # Ys/L >= r_hi: no darkness evidence (dev round: 0.80 caused lit-pixel collateral lift)
+    r_lo: float = 0.30           # Ys/L <= r_lo: full darkness evidence
     chroma_tau: float = 0.30     # log-chromaticity distance (to lit surround) at which material-consistency falls to e^-1
     water_penalty: float = 0.8   # NIR: NDWI-based reduction of confidence for water-like pixels
     target_kappa: float = 0.90   # local target = kappa * surround lit level
